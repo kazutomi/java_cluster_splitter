@@ -1,0 +1,1 @@
+java clusterSplitter -0 ../AR0278TM.csv ../AR0278TM_clusterP.txt  ../outdir
