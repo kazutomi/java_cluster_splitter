@@ -108,6 +108,8 @@ public class treeMethod {
 	}
 
 	private void decideClusterAutoNum(){// make the clusterAutoNum = log10(leaf node number)
+		boolean printComments = false;
+		if (printComments)System.out.println("\nuser setting cluster number -> "+clusterSplitter.getUserClusterNum());
 		if(clusterSplitter.getUserClusterNum() == 0){
 			int c = (int)Math.round(50.0000000000000 * Math.log10((double)(this.getLeafNodeNum()))  -140.05149978319912);
 //			int c = (int)Math.rint(21.714724095162598 * Math.log10((double)(this.getLeafNodeNum())  -140.05149978319912));
@@ -118,18 +120,14 @@ public class treeMethod {
 //			c = c + 5-(c%5);
 			clusterSplitter.setUserClusterNum(c);
 			clusterSplitter.setClusterNum(c);
+			
+			if (printComments){
+				System.out.println("adjusted cluster number -> " +c+"\n");
+			}
 		}
 	}
 	
-//	private void decideClusterNum(){
-//		System.out.println(this.getLeafNodeNum());//@test
-//		if(ControllMethod.getClusterNum() > this.getLeafNodeNum()){
-////			this.setClusterNum(this.getClusterAutoNum());//@del
-//			ControllMethod.setClusterNum(this.getClusterAutoNum());
-//		}
-//		System.out.println(ControllMethod.getClusterNum());//@test
-//		
-//	}
+
 	
 	void makeNodesLists(double x, double y, double w, double h) {
 		boolean printComment = false;
@@ -153,18 +151,6 @@ public class treeMethod {
 		 *
 		 */
 		makeInnerNodeMethodNew();
-		
-
-//		
-//		makeNodeList(ControllMethod.getClusterNum());//should be renew @@ del
-////		this.printNodeList();//@test
-//		makeNodeArray(ControllMethod.getClusterNum());//@@ del
-////		this.printNodeArray();//@test
-//		makeClusterNodeList(ControllMethod.getClusterNum());//need
-////		this.printClusterNodeList();//@test
-		
-		
-//		makeInnerNodeMethodOld();//oldMethod!!
 		makeClusterValue();
 		
 //		printAllTree();//@test
@@ -229,106 +215,7 @@ public class treeMethod {
 	////  -clusterList
 	////////////////////////////////
 	
-	
-	// make midNodes list
 
-	
-	/**
-	 * the new method for make midNode list by useing two lists
-	 *
-	
-	private void makeMidnodeList(){
-		ArrayList<treeNode> shortList = new ArrayList<treeNode>();// temporary for sorting
-		LinkedList<treeNode> longList = new LinkedList<treeNode>();// the midpoint list from root to the midnode that have higher midpoint the the maxHeight;
-		int previouseDifferentHeightPlace = -1;
-		boolean longlistCompleat = false;
-		
-	/**
-	 *@make midNodes list
-		-first to do
-		 put the root in the longList
-		 put the children of root into the shortList by height order
-		 mark the [-1] as the previous previousDifferentHeightNode place
-		 
-		-then
-		 
-		
-		 take the first node in the list as tarNode
-		 compare is the new one has the same height and the one node before
-		 -> if (it's different){
-				compare if (the size is the clustNode-1){
-					} else{
-		 previousDifferentHeightNode place is the .size()-2 (the node before the last node in the longList)
-		 -> if it's not, add the tarNode into the longList as the last element
-		 if the size of longList is clusterNum-1, then go to end condition2 -> [after compare, only add if it's the same height]
-		 -> if a new tarNode has a different height, then don't add it and finish the midNodesList func and copy the longList to the NodeList 
-		 => next is to split the clusters 
-		
-		 find the two childNode of the tarNode
-		 check the children's (midNode's height > maxLeafHeight) -> if true hold the child, if false do not use the child.
-		 put the holding children in to the short list by binary search for finding the right place by comparing it's height.
-		 eliminate the first one
-		 
-		
-		-end conditions
-		 1 shortList is empty -> end
-		 2 longList has more nodes than cluster number-1 && the last adding node has lower height the the previous -> end 
-	 */
-		
-		
-		/*void makeMidNodesLists(){
-			dif shortList, longList, longListCompleat=false;
-			initLists(shortList, longList);
-			while(!longlistCompleat){
-				renewLists(shortList, longList, longListCompleat);
-			}
-			copy the longList to the official nodeList for split the clusters
-		}
-
-		void initLists(shortList, longList){
-			put the root in the longList;
-			put the children of root into the shortList by height order;
-			mark the [-1] as the previous previousDifferentHeightNode place;
-		}
-
-		void renewLists(shortList, longList, longListCompleat){
-			take the first node in the shortList as the tarNode;
-			if(the shortList is empty){longListCompleat = true; return}
-			if (tarNode has the same height and the one node before){
-				if (the size is the clustNode-1){
-					longListCompleat = true;
-					return; (and copy the longList as the nodeList for split clusters)
-				} else{
-					add the tarNode to the longList
-					previousDifferentHeightNode place is the .size()-2 (the node before the last node in the longList)
-				} else{
-					add the tarNode into the longList as the last element
-				}
-			}
-
-			.check the children's (midNode's height > maxLeafHeight) -> if true hold the child, if false do not use the child.
-			.put the holding children in to the short list by binary search for finding the right place by comparing its height.
-			if(tarNode.leftChid.height > maxLeafHeight){insert tarNode.leftChid in to shortList.place(binarySearchForShortList(list, node))}
-			if(tarNode.rightChild.height > maxLeafHeight){insert tarNode.leftChid in to shortList.place(binarySearchForShortList(list, node))}
-			eliminate the first one
-
-		}
-
-		void binarySearchForShortList(list, node){
-			@@@binary search;/////@@@
-			return the place node should be insert into the list;
-		}
-		
-		*
-		
-	}*/
-	
-	//
-	
-	//
-	
-	//
-	
 	// nodeList
 	private void makeNodeList(int n) {// make a node list ordered by height. node number > n, but only have right order till n node.
 		int counter = n;
@@ -607,7 +494,8 @@ public class treeMethod {
 					tarNod = tmpQ.poll();
 					if(tarNod.isLeaf()){
 						j++;
-						bw.write(tarNod.getProbeID()+", "+(tarNod.getTableLine()+0)+"\n");
+						bw.write((tarNod.getTableLine()+0)+"\n");
+//						bw.write(tarNod.getProbeID()+", "+(tarNod.getTableLine()+0)+"\n");
 //						bw.write(tarNod.getProbeID()+", "+tarNod.getValueOneLine()+", "+tarNod.getGeneSymbol()+", "+(i+1)+"-["+ clstNod.getHira()+"-"+clstNod.getHorz()+"]"+"\n");
 					}else{
 						tmpQ.add(tarNod.getLeft());
@@ -665,128 +553,7 @@ public class treeMethod {
 		}
 	}
 	
-	/////////////////////////
-	//	write cluster info//
-	/////////////////////////
-//	public void writeClusterLeafInfo(String outputPath) {///@@@ you should move this to saveFileMethod. -> no. you should break it down into smaller parts 
-//		//about folder
-//		String outputFolerName = outputPath + "/"+"Clusters";
-//		File outputFolder;
-//		outputFolder = FolderUtility.chooseFolder(outputFolerName);
-//		if(outputFolder == null){
-//			System.out.println("couldent make a new director ->"+outputFolerName);//@system
-//			return;
-//		}
-//		
-//		//
-//		// 1 cluster numbers noneed
-//		//
-//		try {
-//			File file = new File(outputFolder,ControllMethod.getDataName()+"Clst"+ControllMethod.getClusterNum()+"clusterNumbers.csv");
-//			// if file doesnt exists, then create it
-//			if (!file.exists()) {
-//				file.createNewFile();
-//			}
-//			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-//			BufferedWriter bw = new BufferedWriter(fw);
-//			//
-//			//write process
-//			treeNode ct;
-//			for(int i = 0; i < ControllMethod.getClusterNum(); i++){
-//				ct = this.clusterNodeList.get(i);
-//				bw.write((i+1)+":"+"["+ct.getHira()+"-"+ct.getHorz()+"], hight:"+ ct.getHeight() +", "+ ct.getMembers() +",\n");
-//			}
-//			//end write process
-//			//
-//			bw.close();
-//			System.out.println("saved clusterID");//@system
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		//
-//		// 2 write leaves
-//		try {
-//			File file = new File(outputFolder, ControllMethod.getDataName()+"Clst"+ControllMethod.getClusterNum()+"ID.csv");
-//			// if file doesnt exists, then create it
-//			if (!file.exists()) {
-//				file.createNewFile();
-//			}
-//			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-//			BufferedWriter bw = new BufferedWriter(fw);
-//			//
-//			//write process
-//			Queue<treeNode> tmpQ = new LinkedList<treeNode>();
-//			treeNode tarNod, clstNod;//target
-//			for(int i = 0; i < ControllMethod.getClusterNum(); i++){
-//				int j = 0;
-//				clstNod = this.clusterNodeList.get(i);
-//				tarNod = clstNod;
-//				tmpQ.add(tarNod);
-//				while (!tmpQ.isEmpty()) {
-//					tarNod = tmpQ.poll();
-//					if(tarNod.isLeaf()){
-//						j++;
-//						bw.write(tarNod.getProbeID()+", "+tarNod.getValueOneLine()+", "+tarNod.getGeneSymbol()+", "+(i+1)+"-["+ clstNod.getHira()+"-"+clstNod.getHorz()+"]"+"\n");
-//					}else{
-//						tmpQ.add(tarNod.getLeft());
-//						tmpQ.add(tarNod.getRight());
-//					}
-//				}
-//			}
-//			//end write process
-//			//
-//			bw.close();
-//			System.out.println("saved clusterNumbers");//@system
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		//
-//		// 3 write separated cluster files. -> clst * [ProbID],[data],[GO]
-//		File outputSepClstFolder = FolderUtility.chooseFolder(outputFolder.getAbsolutePath()+"/clusters");
-//		if(outputFolder == null){
-//			System.out.println("couldent make a new director ->"+outputSepClstFolder.getAbsolutePath());
-//			return;
-//		}
-//		
-//		treeNode clstNode;
-//		for(int i = 0; i < ControllMethod.getClusterNum(); i++){
-//			clstNode = this.clusterNodeList.get(i);
-//			try {
-//				File file = new File(outputSepClstFolder, ControllMethod.getDataName()+"Clst"+(i+1)+"_"+ clstNode.getHira()+"-"+clstNode.getHorz()+"_"+clstNode.getMembers()+".csv");
-//				// if file doesnt exists, then create it
-//				if (!file.exists()) {
-//					file.createNewFile();
-//				}
-//				FileWriter fw = new FileWriter(file.getAbsoluteFile());
-//				BufferedWriter bw = new BufferedWriter(fw);
-//				//
-//				//write process
-//				Queue<treeNode> tmpQ = new LinkedList<treeNode>();
-//				treeNode tarNode;//target
-//					tarNode = clstNode;
-//					tmpQ.add(tarNode);
-//					while (!tmpQ.isEmpty()) {
-//						tarNode = tmpQ.poll();
-//						if(tarNode.isLeaf()){
-//							bw.write(tarNode.getProbeID()+", "+tarNode.getValueOneLine()+", "+tarNode.getGeneSymbol()+", "+(i+1)+"-["+ clstNode.getHira()+"-"+clstNode.getHorz()+"] "+"\n");
-//						}else{
-//							tmpQ.add(tarNode.getLeft());
-//							tmpQ.add(tarNode.getRight());
-//						}
-//					}
-//				//end write process
-//				//
-//				bw.close();
-//				System.out.println("saved cluster info of cluster "+(i+1));//@system
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
-//
-//
+
 
 	
 	//////////////////////////
@@ -1273,11 +1040,11 @@ public class treeMethod {
 		private int previouseDifferentHeightIndex = -1;
 		private boolean longListCompleat = false;
 		private double maxHeight = -1;
-		
+		private boolean printComment = false;
 		
 
 		private treeNode[] makeMidNodesLists(treeNode rt, double mh){
-			boolean printComment = false;
+			
 			treeNode[] longListArray = null;
 			
 //			initLists(rt);
@@ -1341,7 +1108,7 @@ public class treeMethod {
 //		}
 
 		private void renewLists(){
-			if(shortList.isEmpty()){longListCompleat = true; return;}//no more qualified(higher height midnode) node to sort
+			if(shortList.isEmpty()){previouseDifferentHeightIndex = longList.size()-1;longListCompleat = true; return;}//no more qualified(higher height midnode) node to sort-> no trim to the longList!!
 			
 			treeNode tarNode = shortList.get(0);//take the first node in the shortList as the tarNode;
 			shortList.remove(0);// eliminate tarNode from shortList
@@ -1448,94 +1215,4 @@ public class treeMethod {
 			
 	}
 }
-			// make midNodes list
 
-			
-			/**
-			 * the new method for make midNode list by useing two lists
-			 */
-			
-			
-				
-			/**
-			 *@make midNodes list
-				-first to do
-				 put the root in the longList
-				 put the children of root into the shortList by height order
-				 mark the [-1] as the previous previousDifferentHeightNode place
-				 
-				-then
-				 
-				
-				 take the first node in the list as tarNode
-				 compare is the new one has the same height and the one node before
-				 -> if (it's different){
-						compare if (the size is the clustNode-1){
-							} else{
-				 previousDifferentHeightNode place is the .size()-2 (the node before the last node in the longList)
-				 -> if it's not, add the tarNode into the longList as the last element
-				 if the size of longList is clusterNum-1, then go to end condition2 -> [after compare, only add if it's the same height]
-				 -> if a new tarNode has a different height, then don't add it and finish the midNodesList func and copy the longList to the NodeList 
-				 => next is to split the clusters 
-				
-				 find the two childNode of the tarNode
-				 check the children's (midNode's height > maxLeafHeight) -> if true hold the child, if false do not use the child.
-				 put the holding children in to the short list by binary search for finding the right place by comparing it's height.
-				 eliminate the first one
-				 
-				
-				-end conditions
-				 1 shortList is empty -> end
-				 2 longList has more nodes than cluster number-1 && the last adding node has lower height the the previous -> end 
-			 */
-				
-				
-				/*void makeMidNodesLists(){
-					dif shortList, longList, longListCompleat=false;
-					initLists(shortList, longList);
-					while(!longlistCompleat){
-						renewLists(shortList, longList, longListCompleat);
-					}
-					copy the longList to the official nodeList for split the clusters
-				}
-
-				void initLists(shortList, longList){
-					put the root in the longList;
-					put the children of root into the shortList by height order;
-					mark the [-1] as the previous previousDifferentHeightNode place;
-				}
-
-				void renewLists(shortList, longList, longListCompleat){
-					take the first node in the shortList as the tarNode;
-					if(the shortList is empty){longListCompleat = true; return}
-					if (tarNode has the same height and the one node before){
-						if (the size is the clustNode-1){
-							longListCompleat = true;
-							return; (and copy the longList as the nodeList for split clusters)
-						} else{
-							add the tarNode to the longList
-							previousDifferentHeightNode place is the .size()-2 (the node before the last node in the longList)
-						} else{
-							add the tarNode into the longList as the last element
-						}
-					}
-
-					.check the children's (midNode's height > maxLeafHeight) -> if true hold the child, if false do not use the child.
-					.put the holding children in to the short list by binary search for finding the right place by comparing its height.
-					if(tarNode.leftChid.height > maxLeafHeight){insert tarNode.leftChid in to shortList.place(binarySearchForShortList(list, node))}
-					if(tarNode.rightChild.height > maxLeafHeight){insert tarNode.leftChid in to shortList.place(binarySearchForShortList(list, node))}
-					eliminate the first one
-
-				}
-
-				void binarySearchForShortList(list, node){
-					@@@binary search;/////@@@
-					return the place node should be insert into the list;
-				}
-				
-				*/
-		
-	
-	
-	
-//}
