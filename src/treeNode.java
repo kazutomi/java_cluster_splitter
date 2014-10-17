@@ -523,7 +523,7 @@ public class treeNode {
 		line += v;
 		for(int i = 1; i < this.value.size(); i ++){
 			v = this.getValue(i);
-			line += ", "+v;
+			line += ","+v;
 		}
 		return line;
 	}

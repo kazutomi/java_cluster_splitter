@@ -1,1 +1,1 @@
-java clusterSplitter -0 ../AR0278TM.csv ../AR0278TM_clusterP.txt  ../outdir
+java clusterSplitter -0 ../testRawDataR20.csv ../testDendrogramR20.txt  ../outdir

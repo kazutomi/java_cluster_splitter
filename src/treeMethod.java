@@ -53,7 +53,7 @@ public class treeMethod {
 //	private treeNode[] midNodeArray;
 
 	ArrayList<ArrayList<String>> dataTable = new ArrayList<ArrayList<String>>();
-	private String tableHeader = null;
+	private String tableHeader = "";
 
 	// constructor
 	public treeMethod(treeNode r) {
@@ -392,7 +392,7 @@ public class treeMethod {
 
 			Double d;
 //			System.out.println(rowSize);
-			for (int i = 1; i <= rowSize-2; i++) {
+			for (int i = 1; i <= rowSize-1; i++) {
 //				System.out.println("i="+i+"->"+this.dataTable.get(l).get(i));
 				d = Double.parseDouble(this.dataTable.get(l).get(i)) + clusterSplitter.getSuppValue();
 				tn.addValue(d);
@@ -529,7 +529,7 @@ public class treeMethod {
 				BufferedWriter bw = new BufferedWriter(fw);
 				//
 				//write process
-				bw.write(tableHeader+"\n");//header
+				bw.write(tableHeader+"\n");//header @@@error
 				Queue<treeNode> tmpQ = new LinkedList<treeNode>();
 				treeNode tarNode;//target
 					tarNode = clstNode;
@@ -589,13 +589,16 @@ public class treeMethod {
 	}
 	
 	void makeTableHeader(){
+		boolean printComment = false;
 //		for(String s: this.dataTable.get(0)){
 //			this.tableHeader += s+",-";
 //		}
-		for(int i = 0; i < this.dataTable.get(0).size()-1; i ++){
-			this.tableHeader += this.dataTable.get(0).get(i)+", ";
+		
+		for(int i = 0; i < this.dataTable.get(0).size(); i ++){
+			this.tableHeader += this.dataTable.get(0).get(i)+",";
 		}
-		tableHeader = tableHeader.substring(0, tableHeader.length()-2);
+		tableHeader = tableHeader.substring(0, tableHeader.length()-1);
+		if (printComment){System.out.println("[HEADER] : "+tableHeader);}
 	}
 
 	void fillDataTable(String l) {
