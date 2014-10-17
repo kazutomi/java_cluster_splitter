@@ -537,7 +537,7 @@ public class treeMethod {
 					while (!tmpQ.isEmpty()) {
 						tarNode = tmpQ.poll();
 						if(tarNode.isLeaf()){
-							bw.write(tarNode.getProbeID()+", "+tarNode.getValueOneLine()+"\n");
+							bw.write(tarNode.getProbeID()+","+tarNode.getValueOneLine()+"\n");
 						}else{
 							tmpQ.add(tarNode.getLeft());
 							tmpQ.add(tarNode.getRight());

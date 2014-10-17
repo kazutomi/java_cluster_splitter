@@ -130,15 +130,14 @@ public class clusterSplitter {
 		
 		
 
-		tmObj.makeData(inputTreeFilePath, inputValueFilePath);
-		tmObj.writeFilesForTominagaModule(outputDir);
+//		tmObj.makeData(inputTreeFilePath, inputValueFilePath);
+//		tmObj.writeFilesForTominagaModule(outputDir);
 		
 		errorInFlow = true;
 		try {
 
-//			tmObj.makeData(inputTreeFilePath, inputValueFilePath);// read csv file
-
-//			tmObj.writeFilesForTominagaModule(outputDir);
+			tmObj.makeData(inputTreeFilePath, inputValueFilePath);// read csv file
+			tmObj.writeFilesForTominagaModule(outputDir);
 
 			if(printComments)System.out.println("saved cluster lists");
 
