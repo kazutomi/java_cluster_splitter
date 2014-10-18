@@ -65,26 +65,20 @@ public class treeMethod {
 //		this.clusteringFileName = fn+"_clusterP.txt";
 //	}
 	public void makeData(String treeFile, String valueFile){//@@@
+		boolean printData = false;
 		this.timepointFileName = valueFile;//@@@
 		this.clusteringFileName = treeFile;//@@@
 		
 		this.readTableFile(timepointFileName);// read csv file
-		this.makeTableHeader();
-//		 printDataTable();
+//		this.makeTableHeader();
+		if(printData)printDataTable();
 		
 		this.makeDendrogramTree(clusteringFileName);// making ("text/"+fn+".csv") ("text/AR0278_1_Signal2_nrdt.txt") tree using btObj as the root;
 		this.decideClusterAutoNum();
-//		this.decideClusterNum();
+
 		this.makeNodesLists(0.0, 0.0, (float)clusterSplitter.winW, (float)clusterSplitter.winW);// make treemap information, make leaf list and midNode list.
 
-		//old ver
-//		if(ControllMethod.isWriteClusterNum()){
-//			writeClusterLeafInfo(ControllMethod.getOutputFolderName());//@@@ -> declarator comment
-//		}
-//		 printAllLeaves();
-//		 printBranchList();
 
-//		 this.root.printNode();//print all node
 	}
 
 	void makeDendrogramTree(String filePath) {
@@ -389,20 +383,23 @@ public class treeMethod {
 			if(rowSize == this.dataTable.get(l).size() && clusterSplitter.isHasExtraDataRow()){
 				tn.setGeneSymbol(this.dataTable.get(l).get(rowSize - 1));
 			}
-
-			Double d;
-//			System.out.println(rowSize);
-			for (int i = 1; i <= rowSize-1; i++) {
-//				System.out.println("i="+i+"->"+this.dataTable.get(l).get(i));
-				d = Double.parseDouble(this.dataTable.get(l).get(i)) + clusterSplitter.getSuppValue();
-				tn.addValue(d);
-				if ((tn.getValueMax() == -1) || (d > tn.getValueMax())) {
-					tn.setValueMax(d);
-				}
-				if ((tn.getValueMin() == -1) || (d < tn.getValueMin())) {
-					tn.setValueMin(d);
-				}
-			}
+			
+			////
+			//// convert text to double for treeNode value
+			////
+//			Double d;
+////			System.out.println(rowSize);
+//			for (int i = 1; i <= rowSize-2; i++) {//rowSize-2 because the last row is GO symbols
+////				System.out.println("i="+i+"->"+this.dataTable.get(l).get(i));
+//				d = Double.parseDouble(this.dataTable.get(l).get(i)) + clusterSplitter.getSuppValue();
+//				tn.addValue(d);
+//				if ((tn.getValueMax() == -1) || (d > tn.getValueMax())) {
+//					tn.setValueMax(d);
+//				}
+//				if ((tn.getValueMin() == -1) || (d < tn.getValueMin())) {
+//					tn.setValueMin(d);
+//				}
+//			}
 
 		} else {
 			if (tn.left != null) {
@@ -529,7 +526,7 @@ public class treeMethod {
 				BufferedWriter bw = new BufferedWriter(fw);
 				//
 				//write process
-				bw.write(tableHeader+"\n");//header @@@error
+				bw.write(dataTableLine(0)+"\n");//header @@@error
 				Queue<treeNode> tmpQ = new LinkedList<treeNode>();
 				treeNode tarNode;//target
 					tarNode = clstNode;
@@ -537,7 +534,9 @@ public class treeMethod {
 					while (!tmpQ.isEmpty()) {
 						tarNode = tmpQ.poll();
 						if(tarNode.isLeaf()){
-							bw.write(tarNode.getProbeID()+","+tarNode.getValueOneLine()+"\n");
+							bw.write(dataTableLine(tarNode.getTableLine())+"\n");
+//							bw.write(tarNode.getProbeID()+","+tarNode.getValueOneLine()+"\n");
+							
 						}else{
 							tmpQ.add(tarNode.getLeft());
 							tmpQ.add(tarNode.getRight());
@@ -554,7 +553,15 @@ public class treeMethod {
 	}
 	
 
-
+	String dataTableLine(int n){
+		String s = "";
+		Iterator itr = this.dataTable.get(n).iterator();
+		while(itr.hasNext()){
+			s+=itr.next()+",";
+		}
+		s = s.substring(0, s.length()-1);
+		return s;
+	}
 	
 	//////////////////////////
 	// open file operation
@@ -588,18 +595,18 @@ public class treeMethod {
 		if(printComment) System.out.println();
 	}
 	
-	void makeTableHeader(){
-		boolean printComment = false;
-//		for(String s: this.dataTable.get(0)){
-//			this.tableHeader += s+",-";
+//	void makeTableHeader(){
+//		boolean printComment = false;
+////		for(String s: this.dataTable.get(0)){
+////			this.tableHeader += s+",-";
+////		}
+//		
+//		for(int i = 0; i < this.dataTable.get(0).size(); i ++){
+//			this.tableHeader += this.dataTable.get(0).get(i)+",";
 //		}
-		
-		for(int i = 0; i < this.dataTable.get(0).size(); i ++){
-			this.tableHeader += this.dataTable.get(0).get(i)+",";
-		}
-		tableHeader = tableHeader.substring(0, tableHeader.length()-1);
-		if (printComment){System.out.println("[HEADER] : "+tableHeader);}
-	}
+//		tableHeader = tableHeader.substring(0, tableHeader.length()-1);
+//		if (printComment){System.out.println("[HEADER] : "+tableHeader);}
+//	}
 
 	void fillDataTable(String l) {
 		this.dataTable.add(new ArrayList<String>());

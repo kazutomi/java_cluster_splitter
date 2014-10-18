@@ -57,7 +57,7 @@ public class treeNode {
 	// from dataTable
 	private String probeID = null;
 	private String geneSymbol = null;
-	private ArrayList<Double> value = new ArrayList<Double>();
+	private ArrayList<Double> value = new ArrayList<Double>();// do not use for clusterSplitter
 	private double valueMax = -1;
 	private double valueMin = -1;
 
