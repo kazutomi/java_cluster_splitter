@@ -1,9 +1,10 @@
-SetEnv = 'JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8'
+ENV.delete('JAVA_TOOL_OPTIONS')
+encoding = 'UTF-8'
 
 task :default => :compile
 
 task :compile do
-  sh "env #{SetEnv} javac src/*.java"
+  sh "javac -encoding #{encoding} src/*.java"
 end
 
 task :clean do
