@@ -51,8 +51,8 @@ public class treeMethod {
 	private treeNode[] midNodeArray;// for create clusterList//@@ del
 	
 //	private treeNode[] midNodeArray;
-
-	ArrayList<ArrayList<String>> dataTable = new ArrayList<ArrayList<String>>();
+	ArrayList<String> tableDataString = new ArrayList<String>();
+//	ArrayList<ArrayList<String>> dataTable = new ArrayList<ArrayList<String>>();
 	private String tableHeader = "";
 
 	// constructor
@@ -71,7 +71,7 @@ public class treeMethod {
 		
 		this.readTableFile(timepointFileName);// read csv file
 //		this.makeTableHeader();
-		if(printData)printDataTable();
+//		if(printData)printDataTable();
 		
 		this.makeDendrogramTree(clusteringFileName);// making ("text/"+fn+".csv") ("text/AR0278_1_Signal2_nrdt.txt") tree using btObj as the root;
 		this.decideClusterAutoNum();
@@ -377,12 +377,16 @@ public class treeMethod {
 			// System.out.println(this.dataTable.get(Integer.parseInt(nt.name.replaceAll("L",
 			// ""))).get(0));
 			//int l = Integer.parseInt(nt.getName().replaceAll("L", ""));
+			
+			/*
 			int l = tn.getTableLine();
 			tn.setProbeID(this.dataTable.get(l).get(0));
 			int rowSize = this.dataTable.get(0).size();
 			if(rowSize == this.dataTable.get(l).size() && clusterSplitter.isHasExtraDataRow()){
 				tn.setGeneSymbol(this.dataTable.get(l).get(rowSize - 1));
+				
 			}
+			*/
 			
 			////
 			//// convert text to double for treeNode value
@@ -526,7 +530,8 @@ public class treeMethod {
 				BufferedWriter bw = new BufferedWriter(fw);
 				//
 				//write process
-				bw.write(dataTableLine(0)+"\n");//header @@@error
+				bw.write(tableDataString.get(0)+"\n");
+//				bw.write(dataTableLine(0)+"\n");//header @@@error
 				Queue<treeNode> tmpQ = new LinkedList<treeNode>();
 				treeNode tarNode;//target
 					tarNode = clstNode;
@@ -534,7 +539,8 @@ public class treeMethod {
 					while (!tmpQ.isEmpty()) {
 						tarNode = tmpQ.poll();
 						if(tarNode.isLeaf()){
-							bw.write(dataTableLine(tarNode.getTableLine())+"\n");
+							bw.write(tableDataString.get(tarNode.getTableLine())+"\n");
+//							bw.write(dataTableLine(tarNode.getTableLine())+"\n");
 //							bw.write(tarNode.getProbeID()+","+tarNode.getValueOneLine()+"\n");
 							
 						}else{
@@ -552,7 +558,7 @@ public class treeMethod {
 		}
 	}
 	
-
+/*
 	String dataTableLine(int n){
 		String s = "";
 		Iterator itr = this.dataTable.get(n).iterator();
@@ -562,6 +568,7 @@ public class treeMethod {
 		s = s.substring(0, s.length()-1);
 		return s;
 	}
+	*/
 	
 	//////////////////////////
 	// open file operation
@@ -575,7 +582,8 @@ public class treeMethod {
 			br = new BufferedReader(new FileReader(filePath));// /readTreeTest10/text/AR0538_AR1004_Signals2_L20.csv
 
 			while ((SLine = br.readLine()) != null) {
-				fillDataTable(SLine.trim());
+				fillTableDataString(SLine);
+//				fillDataTable(SLine.trim());
 			}
 
 		} catch (IOException e) {
@@ -608,6 +616,11 @@ public class treeMethod {
 //		if (printComment){System.out.println("[HEADER] : "+tableHeader);}
 //	}
 
+	private void fillTableDataString(String sLine) {
+		tableDataString.add(sLine);
+	}
+
+	/*
 	void fillDataTable(String l) {
 		this.dataTable.add(new ArrayList<String>());
 		String[] elements = l.split(",");
@@ -619,6 +632,7 @@ public class treeMethod {
 //			dataTable.get(dataTable.size() - 1).add("NULL");
 //		}
 	}
+	*/
 
 	void readDendrogramFile(String filePath) {// make a new class and functuion -> readfunc(this)
 		boolean printComment = false;
@@ -861,6 +875,7 @@ public class treeMethod {
 		System.out.println("^^^ tree");//@system
 	}
 	
+	/*
 	void printDataTable() {
 		// System.out.println(dataTable);
 		for (int i = 0; i < dataTable.size(); i++) {
@@ -870,6 +885,7 @@ public class treeMethod {
 			System.out.println();
 		}
 	}
+	*/
 	
 	//@@@
 	private void initeLeafNodeNum(){
@@ -999,13 +1015,13 @@ public class treeMethod {
 		this.midNodeArray = branchArray;
 	}
 
-	public ArrayList<ArrayList<String>> getDataTable() {
-		return dataTable;
-	}
+//	public ArrayList<ArrayList<String>> getDataTable() {
+//		return dataTable;
+//	}
 
-	public void setDataTable(ArrayList<ArrayList<String>> dataTable) {
-		this.dataTable = dataTable;
-	}
+//	public void setDataTable(ArrayList<ArrayList<String>> dataTable) {
+//		this.dataTable = dataTable;
+//	}
 
 	public void setTreemapX(double treemapX) {
 		this.treemapX = treemapX;
