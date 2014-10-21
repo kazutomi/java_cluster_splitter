@@ -1,8 +1,21 @@
 import java.io.File;
+import java.io.IOException;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class clusterSplitter {
+	/*
+	 * elcipse args
+	 * -0 text/testRawDataR20.csv text/testDendrogramR20.txt  outdir_R20 
+	 * -0 text/AR0278TM.csv text/AR0278TM_clusterP.txt  outdir_AR0278TM 
+	 * -0 text/AR0538TM.csv text/AR0538TM_clusterP.txt  outdir_AR0538TM 
+	 * -0 text/AR1361TM.csv text/AR1361TM_clusterP.txt  outdir_AR1361TM 
+	 * -0 text/Figure2TM.csv text/Figure2TM_clusterP.txt  outdir_Figure2TM
+	 * 
+	 * 
+	 * */
+	
 	// globals
 
 	private static int clusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
@@ -55,97 +68,99 @@ public class clusterSplitter {
 		boolean printComments = false;
 		
 		
-		if (args.length != 4){
-			System.out.println(errorHeader+"This program needs 4 args");
-			System.exit(1);
-		}
-		
-		if(printComments){
-			System.out.println("args:");
-			for(String s:args){
-				System.out.println(s);
-			}
-			System.out.println();
-		}
-		
-		//checking are the args[] qualified
-		errorInChecking = false; errorInFlow = true; printComments = false;
-		try {
-			//splitMood and cluster number;
-			setSplitMood(args[0].charAt(0));
-			userClusterNum = -1;
-			if (getSplitMood() == '+' || getSplitMood() == '-') {
-				try{
-					userClusterNum = Integer.parseInt(args[0].substring(1));
-				} catch (NumberFormatException e) {
-					System.out.println(errorHeader+ "unqualified cluster number ->" + args[0]);
-					errorInChecking = true;
-				}
-			} else {
-				setSplitMood('|');
-				userClusterNum = Integer.parseInt(args[0]);
-			}
-			clusterNum = userClusterNum;
-			if (printComments) System.out.println("cluster split mood -> " + getSplitMood()+ ", num ->" + clusterNum);
-
-			// dendrogramFile & expressionFile
-			for(int i = 1; i <= 2; i++){
-				File f = new File(args[i]);
-				if(f.exists() && !f.isDirectory()) {
-					switch (i) {
-		            	case 1: expressionFile = f;
-		            		setInputTableFilePath(f.getPath());
-		            		break;	
-		            	case 2: dendrogramFile = f;
-		            		setInputTreeFilePath(f.getPath());
-		            		break;
-					}
-					if(printComments)System.out.println(args[i]+" is a file");
-				}else{
-					System.out.println(errorHeader+ args[i]+" is not a file or does not exist");
-					errorInChecking = true;
-				}
-			}
-
-			// outputDirectry
-			File f = new File(args[3]);
-			if(f.exists() && f.isDirectory()){
-				outputDir = f;
-				if(printComments)System.out.println(args[3]+"is a directry");
-			} else{
-				System.out.println(errorHeader+ args[3]+" is not a directry or does not exist");
-				errorInChecking = true;
-			}
-			
-			errorInFlow = false;
-		} finally {
-			if (errorInFlow || errorInChecking) {
-				if(errorInFlow)	System.out.println(errorHeader+ "could not finish checking args[]");
-				if(errorInChecking)	System.out.println(errorHeader+ "error occurred above");
-				System.exit(1);
-			}
-			
-		}
-		errorInChecking = false;
-		
+//		if (args.length != 4){
+//			System.err.println(errorHeader+"This program needs 4 args");
+//			System.exit(1);
+//		}
+//		
+//		if(printComments){
+//			System.out.println("args:");
+//			for(String s:args){
+//				System.out.println(s);
+//			}
+//			System.out.println();
+//		}
 		
 
-//		tmObj.makeData(inputTreeFilePath, inputValueFilePath);
-//		tmObj.writeFilesForTominagaModule(outputDir);
+//		
+//		//checking are the args[] qualified
+//		errorInChecking = false; errorInFlow = true; printComments = false;
+//		try {
+//			//splitMood and cluster number;
+//			setSplitMood(args[0].charAt(0));
+//			userClusterNum = -1;
+//			if (getSplitMood() == '+' || getSplitMood() == '-') {
+//				try{
+//					userClusterNum = Integer.parseInt(args[0].substring(1));
+//				} catch (NumberFormatException e) {
+//					System.out.println(errorHeader+ "unqualified cluster number ->" + args[0]);
+//					errorInChecking = true;
+//				}
+//			} else {
+//				setSplitMood('|');
+//				userClusterNum = Integer.parseInt(args[0]);
+//			}
+//			clusterNum = userClusterNum;
+//			if (printComments) System.out.println("cluster split mood -> " + getSplitMood()+ ", num ->" + clusterNum);
+//
+//			// dendrogramFile & expressionFile
+//			for(int i = 1; i <= 2; i++){
+//				File f = new File(args[i]);
+//				if(f.exists() && !f.isDirectory()) {
+//					switch (i) {
+//		            	case 1: expressionFile = f;
+//		            		setInputTableFilePath(f.getPath());
+//		            		break;	
+//		            	case 2: dendrogramFile = f;
+//		            		setInputTreeFilePath(f.getPath());
+//		            		break;
+//					}
+//					if(printComments)System.out.println(args[i]+" is a file");
+//				}else{
+//					System.out.println(errorHeader+ args[i]+" is not a file or does not exist");
+//					errorInChecking = true;
+//				}
+//			}
+//
+//			// outputDirectry
+//			File f = new File(args[3]);
+//			if(f.exists() && f.isDirectory()){
+//				outputDir = f;
+//				if(printComments)System.out.println(args[3]+"is a directry");
+//			} else{
+//				System.out.println(errorHeader+ args[3]+" is not a directry or does not exist");
+//				errorInChecking = true;
+//			}
+//			
+//			errorInFlow = false;
+//		} catch(Exception e){
+//		      System.err.println(e);
+//	    } finally {
+//			if (errorInFlow || errorInChecking) {
+//				if(errorInFlow)	System.out.println(errorHeader+ "could not finish checking args[]");
+//				if(errorInChecking)	System.out.println(errorHeader+ "error occurred above");
+//				System.exit(1);
+//			}
+//			
+//		}
+//		errorInChecking = false;
 		
+		checkArgs(args);
+
+
 		errorInFlow = true;
 		try {
-
 			tmObj.makeData(inputTreeFilePath, inputValueFilePath);// read csv file
 			tmObj.writeFilesForTominagaModule(outputDir);
 
 			if(printComments)System.out.println("saved cluster lists");
-
-
+			
 			errorInFlow = false;
-		} finally {
+		}catch(Exception e){
+		      System.err.println(e);
+	    }finally {
 			if (errorInFlow) {
-				System.out.println("error in makeData and writeData");
+				System.err.println("error in makeData and writeData");
 				System.exit(1);
 			} else {
 				if(printComments){
@@ -157,6 +172,88 @@ public class clusterSplitter {
 		}
 	}
 	
+	private static void checkArgs(String[] a){
+		boolean errorInFlow = true;// init -> true
+		boolean errorInChecking = false;// init -> false;
+		boolean printComments = false;
+		
+		if (a.length != 4){
+			System.err.println(errorHeader+"This program needs 4 args");
+			System.exit(1);
+		}
+		
+		if(printComments){
+			System.out.println("args:");
+			for(String s:a){
+				System.out.println(s);
+			}
+			System.out.println();
+		}
+		
+		//checking are the args[] qualified
+				errorInChecking = false; errorInFlow = true; printComments = false;
+				try {
+					//splitMood and cluster number;
+					setSplitMood(a[0].charAt(0));
+					userClusterNum = -1;
+					if (getSplitMood() == '+' || getSplitMood() == '-') {
+						try{
+							userClusterNum = Integer.parseInt(a[0].substring(1));
+						} catch (Exception e) {
+							System.err.println(errorHeader+ "unqualified cluster number ->" + a[0]);
+							errorInChecking = true;
+							System.err.println(e);
+						}
+					} else {
+						setSplitMood('|');
+						userClusterNum = Integer.parseInt(a[0]);
+					}
+					clusterNum = userClusterNum;
+					if (printComments) System.out.println("cluster split mood -> " + getSplitMood()+ ", num ->" + clusterNum);
+
+					// dendrogramFile & expressionFile
+					for(int i = 1; i <= 2; i++){
+						File f = new File(a[i]);
+						if(f.exists() && !f.isDirectory()) {
+							switch (i) {
+				            	case 1: expressionFile = f;
+				            		setInputTableFilePath(f.getPath());
+				            		break;	
+				            	case 2: dendrogramFile = f;
+				            		setInputTreeFilePath(f.getPath());
+				            		break;
+							}
+							if(printComments)System.out.println(a[i]+" is a file");
+						}else{
+							System.err.println(errorHeader+ a[i]+" is not a file or does not exist");
+							errorInChecking = true;
+						}
+					}
+
+					// outputDirectry
+					File f = new File(a[3]);
+					if(f.exists() && f.isDirectory()){
+						outputDir = f;
+						if(printComments)System.out.println(a[3]+"is a directry");
+					} else{
+						System.err.println(errorHeader+ a[3]+" is not a directry or does not exist");
+						errorInChecking = true;
+					}
+					
+					errorInFlow = false;
+				} catch(Exception e){
+				      System.err.println(e);
+			    } finally {
+					if (errorInFlow || errorInChecking) {
+						if(errorInFlow)	System.err.println(errorHeader+ "could not finish checking args[]");
+						if(errorInChecking)	System.err.println(errorHeader+ "error occurred above");
+						System.exit(1);
+					}
+					
+				}
+				errorInChecking = false;
+		
+	}
 	
 
 	public static String getDataName() {

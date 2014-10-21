@@ -174,16 +174,18 @@ public class treeNode {
 	public treeNode newInnerNode() {// return a nList pointer -> make a
 										// child n and return it
 		treeNode td = null;// CurrentNode for return
-		if (this.left == null) {// making a child in left
+		if (this.left == null && this.right == null) {// making a child in left
 			setLeft(new treeNode(this));
 			td = this.left;// for return this.left as current n;
-		} else if (this.right == null) {// making a child in right
+		} else if (this.left != null && this.right == null) {// making a child in right
 			setRight(new treeNode(this));
 			td = this.right;// for return this.right as current n;
 		} else if (this.left != null && this.right != null) {//Error->both occupyed
-			// System.out.println("error in incerting nStructure next to a nLine");
+			System.err.println("error in treeNode newInnerNode() -> both children are occupied");
+			System.exit(1);
 		} else {//Error -> something else...(maybe this else is not necessary)
-			// System.out.println("error in incerting nStructure next to a nLine");
+			System.err.println("error in treeNode newInnerNode() -> left is occupied while right is null");
+			System.exit(1);
 		}
 		td.leaf = false;
 		return td;
@@ -199,14 +201,16 @@ public class treeNode {
 		td.midpoint = 0;
 		td.members = 1;
 		//set the child in either left or right
-		if (this.left == null) {// making a child in left
+		if (this.left == null && this.right == null) {// making a child in left
 			this.setLeft(td);
-		} else if (this.right == null) {// making a child in right
+		} else if (this.left != null &&this.right == null) {// making a child in right
 			this.setRight(td);
 		} else if (this.left != null && this.right != null) {// both occupied
-			 System.out.println("error in incerting nStructure next to a nLine");
+			 System.err.println("error in incerting nStructure in treeNode newLeafNode -> both of the children are occupied");
+			 System.exit(1);
 		} else {
-			 System.out.println("error in incerting nStructure next to a nLine");
+			 System.err.println("error in incerting Structure in treeNode newLeafNode -> the right child is occupied but left is null");
+			 System.exit(1);
 		}
 		return td;
 	}

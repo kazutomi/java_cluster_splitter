@@ -85,9 +85,7 @@ public class treeMethod {
 		boolean printComment = false;
 		readDendrogramFile(filePath);// dendrogram file from R
 		if(printComment){
-			System.out.println("----------^^ read tree ^^------------\n");
-		
-
+			System.out.println("----------^^ read tree ^^------------\n");		
 			if (clusterSplitter.tnObj != root) {
 				System.out.println("couldn't back to root savely. the structure is wrong...");
 				System.exit(1);
@@ -105,7 +103,7 @@ public class treeMethod {
 		boolean printComments = false;
 		if (printComments)System.out.println("\nuser setting cluster number -> "+clusterSplitter.getUserClusterNum());
 		if(clusterSplitter.getUserClusterNum() == 0){
-			int c = (int)Math.round(50.0000000000000 * Math.log10((double)(this.getLeafNodeNum()))  -140.05149978319912);
+			int c = (int)Math.round(50.0 * Math.log10((double)(this.getLeafNodeNum()))  -140.05149978319912);
 //			int c = (int)Math.rint(21.714724095162598 * Math.log10((double)(this.getLeafNodeNum())  -140.05149978319912));
 			c = Math.max(20,c);
 			c = Math.min(c, 75);
@@ -306,8 +304,9 @@ public class treeMethod {
 			}
 			currentN --;
 			
-			if(currentN <0){//Error
-				System.out.println("Error in making clusterNodeList");
+			if(currentN <0){//Error// TODO Why
+				System.err.println("Error in making clusterNodeList");
+				System.exit(1);
 				break;
 			}
 		}
@@ -689,11 +688,11 @@ public class treeMethod {
 		}
 		else{//Error if tarL is not started with "(", it's an Error format or empty.
 			if (tarL.length() == 0){// empty
-				System.out.println("Error -> this clustering file ["+this.clusteringFileName+"] is empty");
+				System.err.println("Error -> this clustering file ["+this.clusteringFileName+"] is empty");
 				System.exit(1);
 			}
 			else{// worng format
-				System.out.println("Error -> this clustering file ["+this.clusteringFileName+"] is in a wrong format. it should started with \"(\"");
+				System.err.println("Error -> this clustering file ["+this.clusteringFileName+"] is in a wrong format. it should started with \"(\"");
 				System.exit(1);
 			}
 //		returnStr = "";//@hold
@@ -763,14 +762,15 @@ public class treeMethod {
 
 				}else{//Error this file does't end with ')'
 					caseNum = -1; //Error
-					System.out.println("Error -> no \')\' found after the last \',\'");//@@@
+					System.err.println("Error -> no \')\' found after the last \',\' in dendrogram file");//@@@
 					tarL ="";
-
+					System.exit(1);
 				}
 			} else {// Error only "," it's not a right form // comma == 0 -> [,*?] because it will be [(,] or [,,] from last substring operation 
 				caseNum = -1;//Error
-				System.out.println("Error -> substring starts with \',\'");//@@@//@@@
+				System.err.println("Error -> substring starts with \',\' in reading dendrogram");//@@@//@@@
 				tarL ="";
+				System.exit(1);
 			}
 		}
 		
