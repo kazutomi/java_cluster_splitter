@@ -18,9 +18,11 @@ public class clusterSplitter {
 	
 	// globals
 
-	private static int clusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
 	private static int userClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
-	private static char splitMood = '|';// -> '+', '-', '/',
+	private static int idealClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
+	private static int realClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
+	private static char userSplitMood = '|';// -> '+', '-', '/',
+	private static char opeSplitMood = '|';// -> '+', '-', '/',
 	private static File expressionFile;
 	private static File dendrogramFile;
 	private static File outputDir;
@@ -64,101 +66,26 @@ public class clusterSplitter {
 		
 		// checking args[] number
 		boolean errorInFlow = true;// init -> true
-		boolean errorInChecking = false;// init -> false;
+//		boolean errorInChecking = false;// init -> false;
 		boolean printComments = false;
-		
-		
-//		if (args.length != 4){
-//			System.err.println(errorHeader+"This program needs 4 args");
-//			System.exit(1);
-//		}
-//		
-//		if(printComments){
-//			System.out.println("args:");
-//			for(String s:args){
-//				System.out.println(s);
-//			}
-//			System.out.println();
-//		}
-		
+		boolean printClustNum = false;//XXX output XXX
 
-//		
-//		//checking are the args[] qualified
-//		errorInChecking = false; errorInFlow = true; printComments = false;
-//		try {
-//			//splitMood and cluster number;
-//			setSplitMood(args[0].charAt(0));
-//			userClusterNum = -1;
-//			if (getSplitMood() == '+' || getSplitMood() == '-') {
-//				try{
-//					userClusterNum = Integer.parseInt(args[0].substring(1));
-//				} catch (NumberFormatException e) {
-//					System.out.println(errorHeader+ "unqualified cluster number ->" + args[0]);
-//					errorInChecking = true;
-//				}
-//			} else {
-//				setSplitMood('|');
-//				userClusterNum = Integer.parseInt(args[0]);
-//			}
-//			clusterNum = userClusterNum;
-//			if (printComments) System.out.println("cluster split mood -> " + getSplitMood()+ ", num ->" + clusterNum);
-//
-//			// dendrogramFile & expressionFile
-//			for(int i = 1; i <= 2; i++){
-//				File f = new File(args[i]);
-//				if(f.exists() && !f.isDirectory()) {
-//					switch (i) {
-//		            	case 1: expressionFile = f;
-//		            		setInputTableFilePath(f.getPath());
-//		            		break;	
-//		            	case 2: dendrogramFile = f;
-//		            		setInputTreeFilePath(f.getPath());
-//		            		break;
-//					}
-//					if(printComments)System.out.println(args[i]+" is a file");
-//				}else{
-//					System.out.println(errorHeader+ args[i]+" is not a file or does not exist");
-//					errorInChecking = true;
-//				}
-//			}
-//
-//			// outputDirectry
-//			File f = new File(args[3]);
-//			if(f.exists() && f.isDirectory()){
-//				outputDir = f;
-//				if(printComments)System.out.println(args[3]+"is a directry");
-//			} else{
-//				System.out.println(errorHeader+ args[3]+" is not a directry or does not exist");
-//				errorInChecking = true;
-//			}
-//			
-//			errorInFlow = false;
-//		} catch(Exception e){
-//		      System.err.println(e);
-//	    } finally {
-//			if (errorInFlow || errorInChecking) {
-//				if(errorInFlow)	System.out.println(errorHeader+ "could not finish checking args[]");
-//				if(errorInChecking)	System.out.println(errorHeader+ "error occurred above");
-//				System.exit(1);
-//			}
-//			
-//		}
-//		errorInChecking = false;
-		
 		checkArgs(args);
-
 
 		errorInFlow = true;
 		try {
 			tmObj.makeData(inputTreeFilePath, inputValueFilePath);// read csv file
 			tmObj.writeFilesForTominagaModule(outputDir);
-
 			if(printComments)System.out.println("saved cluster lists");
-			
 			errorInFlow = false;
-		}catch(Exception e){
-		      System.err.println(e);
+		}catch(Exception err){
+		      err.printStackTrace(System.err);
 	    }finally {
+	    	if(printComments){
+	    		System.out.println("user  number : "+userClusterNum);
+	    		System.out.println("ideal number : "+idealClusterNum);
+	    		System.out.println("real  number : "+realClusterNum);
+	    	}
 			if (errorInFlow) {
 				System.err.println("error in makeData and writeData");
 				System.exit(1);
@@ -167,6 +94,7 @@ public class clusterSplitter {
 					System.out.println("finished");
 					System.out.println("maxMidNodeHeightWithLeafChile"+tmObj.getMaxMiNNodeHeightWithLeafChild());
 				}
+				if(printClustNum)System.out.println((userSplitMood) +""+ userClusterNum+" : "+tmObj.getClusterNodeList().size());
 				System.exit(0);
 			}
 		}
@@ -194,9 +122,10 @@ public class clusterSplitter {
 				errorInChecking = false; errorInFlow = true; printComments = false;
 				try {
 					//splitMood and cluster number;
-					setSplitMood(a[0].charAt(0));
+					setUserSplitMood(a[0].charAt(0));
+					setOpeSplitMood(getUserSplitMood());
 					userClusterNum = -1;
-					if (getSplitMood() == '+' || getSplitMood() == '-') {
+					if (getUserSplitMood() == '+' || getUserSplitMood() == '-') {
 						try{
 							userClusterNum = Integer.parseInt(a[0].substring(1));
 						} catch (Exception e) {
@@ -205,11 +134,11 @@ public class clusterSplitter {
 							System.err.println(e);
 						}
 					} else {
-						setSplitMood('|');
+						setUserSplitMood('|');
 						userClusterNum = Integer.parseInt(a[0]);
 					}
-					clusterNum = userClusterNum;
-					if (printComments) System.out.println("cluster split mood -> " + getSplitMood()+ ", num ->" + clusterNum);
+					idealClusterNum = userClusterNum;
+					if (printComments) System.out.println("cluster split mood -> " + getUserSplitMood()+ ", num ->" + idealClusterNum);
 
 					// dendrogramFile & expressionFile
 					for(int i = 1; i <= 2; i++){
@@ -241,8 +170,8 @@ public class clusterSplitter {
 					}
 					
 					errorInFlow = false;
-				} catch(Exception e){
-				      System.err.println(e);
+				} catch(Exception err){
+					err.printStackTrace(System.err);
 			    } finally {
 					if (errorInFlow || errorInChecking) {
 						if(errorInFlow)	System.err.println(errorHeader+ "could not finish checking args[]");
@@ -268,12 +197,20 @@ public class clusterSplitter {
 		clusterSplitter.suppValue = suppValue;
 	}
 
-	public static int getClusterNum() {
-		return clusterNum;
+	public static int getIdealClusterNum() {
+		return idealClusterNum;
 	}
 
-	public static void setClusterNum(int clusterNum) {
-		clusterSplitter.clusterNum = clusterNum;
+	public static void setIdealClusterNum(int clusterNum) {
+		clusterSplitter.idealClusterNum = clusterNum;
+	}
+
+	public static int getRealClusterNum() {
+		return realClusterNum;
+	}
+
+	public static void setRealClusterNum(int realClusterNum) {
+		clusterSplitter.realClusterNum = realClusterNum;
 	}
 
 	public static int getWinW() {
@@ -339,12 +276,20 @@ public class clusterSplitter {
 		clusterSplitter.inputValueFilePath = inputTableFilePath;
 	}
 
-	public static char getSplitMood() {
-		return splitMood;
+	public static char getUserSplitMood() {
+		return userSplitMood;
 	}
 
-	public static void setSplitMood(char splitMood) {
-		clusterSplitter.splitMood = splitMood;
+	public static void setUserSplitMood(char splitMood) {
+		clusterSplitter.userSplitMood = splitMood;
+	}
+
+	public static char getOpeSplitMood() {
+		return opeSplitMood;
+	}
+
+	public static void setOpeSplitMood(char opeSplitMood) {
+		clusterSplitter.opeSplitMood = opeSplitMood;
 	}
 
 	public static int getUserClusterNum() {
