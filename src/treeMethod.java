@@ -497,7 +497,7 @@ public class treeMethod {
 	public void writeSeparatedClusters(File outD){
 		boolean printComment = false;
 		treeNode clstNode;
-		for(int i = 0; i < clusterSplitter.getRealClusterNum(); i++){
+		for(int i = 0; i < this.getClusterNodeList().size(); i++){
 			clstNode = this.getClusterNodeList().get(i);
 			try {
 				File file = new File(outD, (i+1)+".csv");
@@ -735,6 +735,9 @@ public class treeMethod {
 						currentNode.setLeftMem(currentNode.getLeft().getMembers());//set leftMem
 						currentNode.setRightMem(currentNode.getRight().getMembers());// set rightMem
 						currentNode.setMembers(currentNode.getLeftMem() + currentNode.getRightMem());// set members
+						if((currentNode.getLeftMem() == 1 || currentNode.getRightMem() == 1) && currentNode.getHeight() > this.maxMiNNodeHeightWithLeafChild){
+							this.maxMiNNodeHeightWithLeafChild = currentNode.getHeight();
+						}
 					}else{//Error didnt back to the root
 						if(printComment) System.out.println("did not back to the root -> the clustering file structure might wrong");//System Error
 					}
@@ -1055,22 +1058,31 @@ public class treeMethod {
 	private static class MidnodeListMethod{
 		private ArrayList<treeNode> tempList= new ArrayList<treeNode>();// temporary for sorting
 		private LinkedList<treeNode> resultList = new LinkedList<treeNode>();// the midpoint list from root to the midnode that have higher midpoint the the maxHeight;
-		private int predifIndex = -1;// previous different height index
-		private boolean resultListCompleat = false;
-		private double maxHeight = -1;
+		private int preDifIndex = -1;// previous different height index -> for all renewLists loops
+		private boolean resultListCompleat = false;//use for all renewLists loops
+		private boolean resultListHasMinSiz = false;// use for all renewLists loops
+		private double maxHeight = -1;//use for all addToTempList 
 		private boolean printComment = false;//XXX comment XXX
 		
 		private treeNode[] makeMidNodesLists(treeNode rt, double mh){
 			treeNode[] resultListArray = null;
 			maxHeight = mh;
-			tempList.add(rt);// init tempList
+			addToTempList(0, rt);// init tempList
+//			tempList.add(rt);// init tempList
 			
 			//make resultList
+			if(printComment){
+				System.out.println("-- Start to make tempList and resultList --");
+				System.out.println("idealCN : "+clusterSplitter.getUserSplitMood()+""+clusterSplitter.getIdealClusterNum());
+				System.out.println("maxHeight : "+maxHeight);
+			}
 			while(!resultListCompleat){
 				if(printComment) {
+					System.out.println("┌- predifIndex : "+preDifIndex);
+					System.out.print("├- ");
 					this.printtempList();
+					System.out.print("└- ");
 					this.printresultList();
-					System.out.println("");
 				}
 				renewLists();// sort midnodes in tempList
 			}
@@ -1078,8 +1090,7 @@ public class treeMethod {
 				System.out.println("finalized lists");
 				this.printtempList();
 				this.printresultList();
-				System.out.println("");
-				System.out.println("preIndex = "+predifIndex+"\n");
+				System.out.println("-- Finished to make tempList and resultList --");
 			}
 			
 			// to decide how long the resultList should be
@@ -1094,58 +1105,15 @@ public class treeMethod {
 			return resultListArray;
 		}	
 	
-		private treeNode[] makeMidNodesLists_old(treeNode rt, double mh){
-			
-			treeNode[] resultListArray = null;
-			
-//			initLists(rt);
-			maxHeight = mh;
-			tempList.add(rt);// init tempList
-			
-			//make resultList
-			while(!resultListCompleat){
-				if(printComment) {
-					this.printtempList();
-					this.printresultList();
-					System.out.println("");
-				}
-				renewLists();// sort midnodes in tempList
-			}
-			if(printComment) {
-				System.out.println("finalized lists");
-				this.printtempList();
-				this.printresultList();
-				System.out.println("");
-				System.out.println("preIndex = "+predifIndex+"\n");
+		private void addToTempList(int i, treeNode node) {
+			// TODO Auto-generated method stub
+			treeNode tarNode = node;
+			if(tarNode.getHeight() > this.maxHeight){
+				tempList.add(i, tarNode);
 			}
 			
-			// to decide how long the resultList should be
-			if(clusterSplitter.getUserSplitMood() == '-'
-					|| (clusterSplitter.getUserSplitMood() == '|'
-					&& (clusterSplitter.getUserClusterNum() -2) - predifIndex < resultList.size() - (clusterSplitter.getUserClusterNum()-2))){
-//				return resultList.subList(0, previouseDifferentHeightIndex);
-//				resultListArray = (treeNode[]) resultList.subList(0, previouseDifferentHeightIndex).toArray();
-				resultListArray = resultList.subList(0, predifIndex+1).toArray(new treeNode[predifIndex+1]);
-				
-				if(printComment){
-					System.out.println("returning shorted resultListArray:");
-					printTreeNodeArray(resultListArray);
-				}
-			} else{
-				resultListArray = resultList.toArray(new treeNode[resultList.size()]);
-				
-				if(printComment){
-					System.out.println("returning whole resultListArray:");
-					printTreeNodeArray(resultListArray);
-				}
-			}
-			
-			
-			
-			
-			return resultListArray;
-		}	
-		
+		}
+
 		private void printTreeNodeArray(treeNode[] a){
 			System.out.print("resultListArray :");
 			for(treeNode tarNode: a){
@@ -1153,13 +1121,123 @@ public class treeMethod {
 			}
 			System.out.println("");
 		}
-		
-//		private void initLists(treeNode rt){
-//			tempList.add(rt);
-//		}
-
 
 		private void renewLists(){
+			treeNode tarNode = renewTempList();
+			if(tarNode != null){
+				renewResultList(tarNode);
+			}
+		}
+
+		private void renewResultList(treeNode node) {
+
+			/*
+			 * relation of clusterNum, resultList.size() and index
+			 * clustNum  1   2   3   4   5   6   7   8   9
+			 * size      0   1   2   3   4   5   6   7   8
+			 *           +---+---+---+---+---+---+---+---+
+			 * index     | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+ 			 *           +---+---+---+---+---+---+---+---+
+ 			 * value     |9.0|7.3|6.2|3.6|3.4|3.2|2.5|1.2|
+ 			 *           +---+---+---+---+---+---+---+---+
+			 *
+			 * if resultList.size+1 >= ideaClustNum // conditions that will return resultList
+			 * 	if tarNode.height != getLst.height
+			 * 		return rsultList
+			 * 	else // conditions that will return resultLis.sublist even (tarNode.height == getLst.height)
+			 * 		if preIndex > 0 -> [0].height != tarNode.height
+			 * 			if splitMood = '-' || (splitMood = '|' && (result.siz()-(idealClstNum-1)) >((idealClstNum -1) - (preIndex +1)) //until the gap between + and clusterNum is bigger than - and clusterNum
+			 * 				return resultList.sublist(0:preIndex+1)
+			 * else// continue to add tarNode to resultList
+			 * 	resultList.add(tarNode);
+			 */
+
+			treeNode tarNode = node;
+			boolean difHeightToNext = false;
+			if(resultList.size() >= clusterSplitter.getIdealClusterNum()-1){
+				if(printComment && !resultListHasMinSiz)System.out.println("└-> resultListHasMinSiz");
+				resultListHasMinSiz = true;
+			}
+			
+			 // conditions to stop resultList.add(tarNode);
+			if(resultList.size() == 0){
+				if(resultListHasMinSiz){// (idealClusterNum == 1)
+					resultListCompleat = true;
+					return;
+				}
+			}else{//(resultList.size > 0)
+				if(tarNode.getHeight() != resultList.getLast().getHeight()){
+					difHeightToNext = true;
+				}
+				if(difHeightToNext){// resultList.size > 0 && difHeightToNext
+					preDifIndex = resultList.size()-1;
+					if(resultListHasMinSiz){// resultList.size > 0 && difHeightToNext && resultListEnoughSiz
+						resultListCompleat = true;
+						return;
+					}
+				}else{// (resultList.size > 0) && (same height to next)
+					if(resultListHasMinSiz){// (resultList.size > 0) && (same height to next)&&(resultList has minSiz)
+							if((clusterSplitter.getUserSplitMood() == '-')
+									||
+								(clusterSplitter.getUserSplitMood() == '|') && (resultList.size()-(clusterSplitter.getIdealClusterNum() -1)) >= ((clusterSplitter.getIdealClusterNum()-1) - (preDifIndex+1))){
+								// (resultList.size > 0)&&(same height to next)&&(resultList has minSiz)&&(NO preDifIndex)&&(mood=='|')&&(too much node's after idealCN)
+								resultListCompleat = true;
+					  			List<treeNode> subList = resultList.subList(preDifIndex+1, resultList.size());
+					  			subList.removeAll(subList);
+					  			return;
+							}
+						
+					}
+				}
+			}
+			/**/ // new ver till here
+			
+			/*// DO WORK old ver
+			 if(resultList.size() >= clusterSplitter.getIdealClusterNum() -1){// if resultList is long enough
+				 if(!resultListHasMinSiz){
+					 resultListHasMinSiz=true;
+//					 if(printComment)System.out.println("└-> resultListHasMinSiz");
+				 }
+				 // conditions that will return resultList
+				 if (resultList.size() == 0 || tarNode.getHeight() != resultList.getLast().getHeight()){
+					 resultListCompleat = true;
+					 return;
+				 }
+				 if(tarNode.getHeight() == resultList.getLast().getHeight()){ // conditions that will return resultLis.sublist even (tarNode.height == getLst.height)					 
+					  	if((clusterSplitter.getUserSplitMood() == '-')
+					  		||
+					  		(clusterSplitter.getUserSplitMood() == '|' )
+				  				&& (resultList.size()-(clusterSplitter.getIdealClusterNum() -1)) >= ((clusterSplitter.getIdealClusterNum()-1) - (preDifIndex+1))){ //until the gap between + and clusterNum is bigger than - and clusterNum
+				  			resultListCompleat = true;
+				  			List<treeNode> subList = resultList.subList(preDifIndex+1, resultList.size());
+				  			subList.removeAll(subList);
+				  			return;
+				  		}
+				}
+			}
+			 /**/
+			 
+			if(resultList.size() >0 && tarNode.getHeight() != resultList.getLast().getHeight()){
+				preDifIndex = resultList.size()-1;
+			}
+			resultList.add(tarNode);
+		}
+
+		private treeNode renewTempList(){
+			treeNode tarNode = getFirstInTmpList();//get first node and add its children into tmpList
+			if(tarNode == null){
+				resultListCompleat = true;
+				return null;
+			}
+			// add the children of the tarNode
+			treeNode[] tarChildren = {tarNode.getLeft(), tarNode.getRight()};// get tarNode's children as an array
+			for(treeNode c: tarChildren){// for all the children
+				addToTempList(binarySearchFortempList(c.getHeight()), c);//new
+			}
+			return tarNode;
+		}
+		
+		private void renewLists_old(){
 			treeNode tarNode = getFirstInTmpList();//get first node and add its children into tmpList
 			if(tarNode == null){
 				resultListCompleat = true;
@@ -1191,48 +1269,37 @@ public class treeMethod {
 			 */
 
 
-			if(resultList.size() >0 && tarNode.getHeight() != resultList.getLast().getHeight()){
-				predifIndex = resultList.size()-1;
-			}
+
 			 if(resultList.size() >= clusterSplitter.getIdealClusterNum() -1){// if resultList is long enough
+				 if(!resultListHasMinSiz){
+					 resultListHasMinSiz=true;
+					 if(printComment)System.out.println("└-> resultListHasMinSiz");
+				 }
 				 // conditions that will return resultList
 				 if (resultList.size() == 0/*userClusterNum == 1*/ || tarNode.getHeight() != resultList.getLast().getHeight()){
 					 resultListCompleat = true;
 					 return;
 				 }
-				 //XXX algorithm XXX
 				 if(tarNode.getHeight() == resultList.getLast().getHeight()){ // conditions that will return resultLis.sublist even (tarNode.height == getLst.height)
-					 if(printComment)System.out.println("!!!sameHeight , preIndex = "+ predifIndex);
+//					 if(printComment)System.out.println("!!!sameHeight , preIndex = "+ predifIndex);
 					 
-					  	if (predifIndex >= 0){
-					  			if(clusterSplitter.getUserSplitMood() == '-'){
-					  		
-					  			// [0].height != tarNode.height -> not all height value are same -> if so resultList should grow till the tempList is empty or has a different height value
-					  			resultListCompleat = true;
-					  			List<treeNode> subList = resultList.subList(predifIndex+1, resultList.size());
-					  			subList.removeAll(subList);
-//					  			resultList.remove
-//					  			resultList = (LinkedList<treeNode>) resultList.subList(0, predifIndex+1);
-					  			return;
-					  		}
-					  		if ((clusterSplitter.getUserSplitMood() == '|' )
-					  				&& (resultList.size()-(clusterSplitter.getIdealClusterNum() -1)) > ((clusterSplitter.getIdealClusterNum()-1) - (predifIndex+1))){ //until the gap between + and clusterNum is bigger than - and clusterNum
-					  			resultListCompleat = true;
-					  			List<treeNode> subList = resultList.subList(predifIndex+1, resultList.size());
-					  			subList.removeAll(subList);
-//					  			resultList = (LinkedList<treeNode>) resultList.subList(0, predifIndex+1);
-					  			return;
-					  		}
-					  	}else{
-					  		if(clusterSplitter.getUserSplitMood() == '-'){
-					  			resultListCompleat = true;
-					  			resultList.clear();
-					  			return;
-				  			}
-					  	}
+					  	if((clusterSplitter.getUserSplitMood() == '-')
+					  		||
+					  		(clusterSplitter.getUserSplitMood() == '|' )
+				  				&& (resultList.size()-(clusterSplitter.getIdealClusterNum() -1)) >= ((clusterSplitter.getIdealClusterNum()-1) - (preDifIndex+1))){ //until the gap between + and clusterNum is bigger than - and clusterNum
+				  			resultListCompleat = true;
+				  			List<treeNode> subList = resultList.subList(preDifIndex+1, resultList.size());
+				  			subList.removeAll(subList);
+//				  			resultList = (LinkedList<treeNode>) resultList.subList(0, predifIndex+1);
+				  			return;
+				  		}
 				}
 				 
 			}
+			if(resultList.size() >0 && tarNode.getHeight() != resultList.getLast().getHeight()){
+				preDifIndex = resultList.size()-1;
+			}
+
 			resultList.add(tarNode);
 		}
 
@@ -1250,48 +1317,11 @@ public class treeMethod {
 			// add the children of the tarNode
 			treeNode[] tarChildren = {tarNode.getLeft(), tarNode.getRight()};// get tarNode's children as an array
 			for(treeNode c: tarChildren){// for all the children
-				if(c.getHeight() > maxHeight){// if the height is higher than the maxLeafHeight
-					tempList.add(binarySearchFortempList(c.getHeight()), c);// insert the child to the tempList sorted by its height
-//					if(printComments)System.out.println("add a new Node to the tempList");
-				}
+				addToTempList(binarySearchFortempList(c.getHeight()), c);//new
 			}
 		}
 
-
-		private void renewLists_old(){
-			if(tempList.isEmpty()){predifIndex = resultList.size()-1;resultListCompleat = true; return;}//no more qualified(higher height midnode) node to sort-> no trim to the resultList!!
-			
-			treeNode tarNode = tempList.get(0);//take the first node in the tempList as the tarNode;
-			tempList.remove(0);// eliminate tarNode from tempList
-			if(resultList.size()>0){
-				if (tarNode.getHeight() != resultList.get(resultList.size()-1).getHeight()){//if tarNode doesn't have the same height as the last node in resultList
-					if (resultList.size() == clusterSplitter.getUserClusterNum()-1){
-						resultListCompleat = true;
-						return;// (and copy the resultList as the nodeList for split clusters)
-					}
-					predifIndex = resultList.size()-1;//previousDifferentHeightNode place is the .size()-2 (the node before the last node in the resultList)
-				}// if the tarNode has the same height as the last node in resultList, then preHeightIndex do not change.
-			}
-			
-			resultList.add(tarNode);
-			
-			if(predifIndex > -1 && resultList.size() > clusterSplitter.getUserClusterNum()-1 && clusterSplitter.getUserSplitMood() == '-'){// is the mood is '-' then do not need any longer resultList.
-				resultListCompleat = true; return;
-			}
-			
-
-			treeNode[] tarChildren = {tarNode.getLeft(), tarNode.getRight()};// get tarNode's children as an array
-			for(treeNode c: tarChildren){// for all the children
-				if(c.getHeight() > maxHeight){// if the height is higher than the maxLeafHeight
-					tempList.add(binarySearchFortempList(c.getHeight()), c);// insert the child to the tempList sorted by its height
-//					System.out.println("add a new Node to the tempList");
-				}
-			}
-			
-			
-
-		}
-		
+	
 		private void printtempList(){
 			System.out.print("tempList: ");
 			if(this.tempList.size()>0){

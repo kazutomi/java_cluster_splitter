@@ -68,7 +68,7 @@ public class clusterSplitter {
 		boolean errorInFlow = true;// init -> true
 //		boolean errorInChecking = false;// init -> false;
 		boolean printComments = false;
-		boolean printClustNum = false;//XXX output XXX
+		boolean printClustNum = false;//XXX outputs for testing program XXX
 
 		checkArgs(args);
 
