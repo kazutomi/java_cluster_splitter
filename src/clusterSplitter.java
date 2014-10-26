@@ -1,5 +1,11 @@
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,6 +23,7 @@ public class clusterSplitter {
 	 * */
 	
 	// globals
+	private static boolean printClustNum = true;//XXX outputs for testing program XXX
 
 	private static int userClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
 	private static int idealClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
@@ -26,6 +33,9 @@ public class clusterSplitter {
 	private static File expressionFile;
 	private static File dendrogramFile;
 	private static File outputDir;
+	
+	private static String[] acceptOptions = {"-s"};// [-s] -> do not allow singleNode cluster
+	private static ArrayList<Boolean> optionSwitchs = new ArrayList<Boolean>();// need init <- by acceptOption.length
 	
 //	private static String folderName = null;// "AR0278TM";
 
@@ -66,11 +76,12 @@ public class clusterSplitter {
 		
 		// checking args[] number
 		boolean errorInFlow = true;// init -> true
-//		boolean errorInChecking = false;// init -> false;
 		boolean printComments = false;
-		boolean printClustNum = false;//XXX outputs for testing program XXX
-
+		
+		//init
+		initOptionSettings();
 		checkArgs(args);
+
 
 		errorInFlow = true;
 		try {
@@ -100,16 +111,57 @@ public class clusterSplitter {
 		}
 	}
 	
+	private static void initOptionSettings() {
+		// baby ver
+//		for(int i = 0; i < acceptOptions.length; i ++){
+//			optionSwitchs.add(false);
+//		}
+		
+		// stylish ver
+		getOptionSwitchs().addAll(Arrays.asList(new Boolean[acceptOptions.length]));
+		Collections.fill(getOptionSwitchs(), new Boolean(false));
+//		printOptionSwitchs();//TODO
+	}
+	
+	private static void changeStatasInOptionSwitchs(int i, boolean b){
+		getOptionSwitchs().remove(i);
+		getOptionSwitchs().add(i, b);
+		
+	}
+
 	private static void checkArgs(String[] a){
+		
+		if (a.length < 4){
+			System.err.println(errorHeader+"This program needs atleast 4 args");
+			System.exit(1);
+		}else if(a.length > 4 + acceptOptions.length){
+			System.err.println(errorHeader+"This program accept atmost 5 args");
+			System.exit(1);
+		}else{//has right input args 
+			//for fixed args
+			checkFixedArgs(Arrays.copyOfRange(a, 0, 4));
+			//for option args (if there are any)
+			if(a.length > 4) checkOptionArgs(Arrays.copyOfRange(a, 4, a.length));
+		}
+	}
+	
+	private static void checkOptionArgs(String[] o){
+		boolean printComments = false;
+		LinkedList<String> errLists = initOptionArgs(o);
+		if(printComments) printOptionSwitchs();
+		if(!errLists.isEmpty()){
+			System.err.print("invalied options : ");
+			for(String input :errLists){
+				System.err.print(input+", ");
+			}
+			System.exit(1);
+		}
+	}
+	
+	private static void checkFixedArgs(String[] a){
 		boolean errorInFlow = true;// init -> true
 		boolean errorInChecking = false;// init -> false;
 		boolean printComments = false;
-		
-		if (a.length != 4){
-			System.err.println(errorHeader+"This program needs 4 args");
-			System.exit(1);
-		}
-		
 		if(printComments){
 			System.out.println("args:");
 			for(String s:a){
@@ -119,72 +171,105 @@ public class clusterSplitter {
 		}
 		
 		//checking are the args[] qualified
-				errorInChecking = false; errorInFlow = true; printComments = false;
-				try {
-					//splitMood and cluster number;
-					setUserSplitMood(a[0].charAt(0));
-					setOpeSplitMood(getUserSplitMood());
-					userClusterNum = -1;
-					if (getUserSplitMood() == '+' || getUserSplitMood() == '-') {
-						try{
-							userClusterNum = Integer.parseInt(a[0].substring(1));
-						} catch (Exception e) {
-							System.err.println(errorHeader+ "unqualified cluster number ->" + a[0]);
-							errorInChecking = true;
-							System.err.println(e);
-						}
-					} else {
-						setUserSplitMood('|');
-						userClusterNum = Integer.parseInt(a[0]);
-					}
-					idealClusterNum = userClusterNum;
-					if (printComments) System.out.println("cluster split mood -> " + getUserSplitMood()+ ", num ->" + idealClusterNum);
-
-					// dendrogramFile & expressionFile
-					for(int i = 1; i <= 2; i++){
-						File f = new File(a[i]);
-						if(f.exists() && !f.isDirectory()) {
-							switch (i) {
-				            	case 1: expressionFile = f;
-				            		setInputTableFilePath(f.getPath());
-				            		break;	
-				            	case 2: dendrogramFile = f;
-				            		setInputTreeFilePath(f.getPath());
-				            		break;
-							}
-							if(printComments)System.out.println(a[i]+" is a file");
-						}else{
-							System.err.println(errorHeader+ a[i]+" is not a file or does not exist");
-							errorInChecking = true;
-						}
-					}
-
-					// outputDirectry
-					File f = new File(a[3]);
-					if(f.exists() && f.isDirectory()){
-						outputDir = f;
-						if(printComments)System.out.println(a[3]+"is a directry");
-					} else{
-						System.err.println(errorHeader+ a[3]+" is not a directry or does not exist");
-						errorInChecking = true;
-					}
-					
-					errorInFlow = false;
-				} catch(Exception err){
-					err.printStackTrace(System.err);
-			    } finally {
-					if (errorInFlow || errorInChecking) {
-						if(errorInFlow)	System.err.println(errorHeader+ "could not finish checking args[]");
-						if(errorInChecking)	System.err.println(errorHeader+ "error occurred above");
-						System.exit(1);
-					}
-					
+		errorInChecking = false; errorInFlow = true; printComments = false;
+		try {
+			//splitMood and cluster number;
+			setUserSplitMood(a[0].charAt(0));
+			setOpeSplitMood(getUserSplitMood());
+			userClusterNum = -1;
+			if (getUserSplitMood() == '+' || getUserSplitMood() == '-') {
+				try{
+					userClusterNum = Integer.parseInt(a[0].substring(1));
+				} catch (Exception e) {
+					System.err.println(errorHeader+ "unqualified cluster number ->" + a[0]);
+					errorInChecking = true;
+					System.err.println(e);
 				}
-				errorInChecking = false;
+			} else {
+				setUserSplitMood('|');
+				userClusterNum = Integer.parseInt(a[0]);
+			}
+			idealClusterNum = userClusterNum;
+			if (printComments) System.out.println("cluster split mood -> " + getUserSplitMood()+ ", num ->" + idealClusterNum);
+
+			// dendrogramFile & expressionFile
+			for(int i = 1; i <= 2; i++){
+				File f = new File(a[i]);
+				if(f.exists() && !f.isDirectory()) {
+					switch (i) {
+		            	case 1: expressionFile = f;
+		            		setInputTableFilePath(f.getPath());
+		            		break;	
+		            	case 2: dendrogramFile = f;
+		            		setInputTreeFilePath(f.getPath());
+		            		break;
+					}
+					if(printComments)System.out.println(a[i]+" is a file");
+				}else{
+					System.err.println(errorHeader+ a[i]+" is not a file or does not exist");
+					errorInChecking = true;
+				}
+			}
+
+			// outputDirectry
+			File f = new File(a[3]);
+			if(f.exists() && f.isDirectory()){
+				outputDir = f;
+				if(printComments)System.out.println(a[3]+"is a directry");
+			} else{
+				System.err.println(errorHeader+ a[3]+" is not a directry or does not exist");
+				errorInChecking = true;
+			}
+			
+			errorInFlow = false;
+		} catch(Exception err){
+			err.printStackTrace(System.err);
+	    } finally {
+			if (errorInFlow || errorInChecking) {
+				if(errorInFlow)	System.err.println(errorHeader+ "could not finish checking args[]");
+				if(errorInChecking)	System.err.println(errorHeader+ "error occurred above");
+				System.exit(1);
+			}
+			
+		}
+		errorInChecking = false;
+
 		
 	}
 	
 
+	private static LinkedList<String> initOptionArgs(String[] o) {// return invalid option args
+		String inputs[] = o;
+		LinkedList<String> errOptionInputs = new LinkedList<String>();
+		for(int i = 0; i < inputs.length; i++){// for input
+			boolean matched = false;
+			for(int j = 0; j < acceptOptions.length; j ++){
+				if (inputs[i].equals(acceptOptions[j])){
+					changeStatasInOptionSwitchs(j, true);
+					matched = true;
+				}
+			}
+			if(!matched){
+				errOptionInputs.add(inputs[i]);
+			}
+		}
+		return errOptionInputs;
+	}
+
+	private static void printOptionSwitchs(){// TODO
+		System.out.print("optionSwitchs : ");
+		ListIterator<Boolean> litr = getOptionSwitchs().listIterator();
+		for(boolean sw : getOptionSwitchs()){
+			System.out.print(sw+", ");
+		}
+//		while(litr.hasNext()){
+//			System.out.print(litr+", ");
+//		}
+		System.out.println("");
+	}
+	
+	
+	
 	public static String getDataName() {
 		return clusterSplitter.dataName;
 	}
@@ -298,6 +383,14 @@ public class clusterSplitter {
 
 	public static void setUserClusterNum(int userClusterNum) {
 		clusterSplitter.userClusterNum = userClusterNum;
+	}
+
+	public static ArrayList<Boolean> getOptionSwitchs() {
+		return optionSwitchs;
+	}
+
+	public static void setOptionSwitchs(ArrayList<Boolean> optionSwitchs) {
+		clusterSplitter.optionSwitchs = optionSwitchs;
 	}
 
 
