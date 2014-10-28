@@ -23,7 +23,7 @@ public class clusterSplitter {
 	 * */
 	
 	// globals
-	private static boolean printClustNum = true;//XXX outputs for testing program XXX
+	private static boolean printClustNum = false;//XXX outputs for testing program XXX
 
 	private static int userClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
 	private static int idealClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
