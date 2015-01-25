@@ -277,11 +277,6 @@ public class treeNode {
 				str = str.substring(0, str.indexOf(", value = "));
 			}
 			this.height = Double.parseDouble(str);
-			
-			//make maxLeafHeight
-			if (this.height > clusterSplitter.tmObj.getMaxMiNNodeHeightWithLeafChild()){
-				clusterSplitter.tmObj.setMaxLeafHeight(this.height);
-			}
 
 		}
 		if (this.parent == null) {
