@@ -132,10 +132,10 @@ public class clusterSplitter {
 	private static void checkArgs(String[] a){
 		
 		if (a.length < 4){
-			System.err.println(errorHeader+"This program needs atleast 4 args");
+			System.err.println(errorHeader+"This program needs at least 4 args");
 			System.exit(1);
 		}else if(a.length > 4 + acceptOptions.length){
-			System.err.println(errorHeader+"This program accept atmost 5 args");
+			System.err.println(errorHeader+"This program accept at most 5 args");
 			System.exit(1);
 		}else{//has right input args 
 			//for fixed args
