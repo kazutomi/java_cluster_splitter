@@ -94,7 +94,8 @@ public class clusterSplitter {
 			tmObj.writeFilesForTominagaModule(outputDir);
 			
 			//// -[step2.1]- make treeMap output folder
-			String treemapOutputFolderName = FileMethod.makeNewDirectory(getTreemapFolderName(), "Treemap").getPath(); 
+			String treemapOutputFolderName = getOutputDir().getPath();//untested
+//			String treemapOutputFolderName = FileMethod.makeNewDirectory(getTreemapFolderName(), "Treemap").getPath(); 
 			
 			//// -[step2.2]- create and save treemaps
 ////			saveImgMethod.saveImgs(0);// or 0x11<=>0x[color][line] G0->[-,-], G1[-,line], G2[color,-], G3[color, line]
@@ -233,7 +234,8 @@ public class clusterSplitter {
 			// outputDirectry
 			File f = new File(a[3]);
 			if(f.exists() && f.isDirectory()){
-				outputDir = f;
+
+				setOutputDir(f);// untested // outputDir = f;
 				if(printComments)System.out.println(a[3]+"is a directry");
 			} else{
 				System.err.println(errorHeader+ a[3]+" is not a directry or does not exist");
@@ -412,9 +414,12 @@ public class clusterSplitter {
 		clusterSplitter.optionSwitchs = optionSwitchs;
 	}
 
-	private static String getTreemapFolderName() {
-		// TODO return the 
-		return null;
+	public static File getOutputDir() {
+		return outputDir;
+	}
+
+	public static void setOutputDir(File outputDir) {
+		clusterSplitter.outputDir = outputDir;
 	}
 
 }
