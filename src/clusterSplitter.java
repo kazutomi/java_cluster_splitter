@@ -82,11 +82,16 @@ public class clusterSplitter {
 		initOptionSettings();
 		checkArgs(args);
 
-
 		errorInFlow = true;
-		try {
+		try {// main work flow area
+			
+			//make data -> read dedrogram file and make tree then decide the cluster number then make cluster information
 			tmObj.makeData(inputTreeFilePath, inputValueFilePath);// read csv file
+			
+			//make output files
 			tmObj.writeFilesForTominagaModule(outputDir);
+			
+			// for testing
 			if(printComments)System.out.println("saved cluster lists");
 			errorInFlow = false;
 		}catch(Exception err){

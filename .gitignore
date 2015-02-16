@@ -3,3 +3,8 @@
 *.txt
 *.csv
 /outdir/
+
+/text/
+.classpath
+.project
+.settings/
