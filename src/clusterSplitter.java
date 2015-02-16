@@ -85,11 +85,23 @@ public class clusterSplitter {
 		errorInFlow = true;
 		try {// main work flow area
 			
-			//make data -> read dedrogram file and make tree then decide the cluster number then make cluster information
+			// [step 1.1]
+			// make data -> read dedrogram file and make tree then decide the cluster number then make cluster information
 			tmObj.makeData(inputTreeFilePath, inputValueFilePath);// read csv file
 			
-			//make output files
+			// [step 1.2]
+			// make output files
 			tmObj.writeFilesForTominagaModule(outputDir);
+			
+			//// -[step2.1]- make treeMap output folder
+			String treemapOutputFolderName = FileMethod.makeNewDirectory(getTreemapFolderName(), "Treemap").getPath(); 
+			
+			//// -[step2.2]- create and save treemaps
+////			saveImgMethod.saveImgs(0);// or 0x11<=>0x[color][line] G0->[-,-], G1[-,line], G2[color,-], G3[color, line]
+////			saveImgMethod.saveImgs(1);// no color, only gene's block line
+			saveImgMethod.saveImgs(folderName, 2, treemapOutputFolderName);//only genes color -> most useful
+////			saveImgMethod.saveImgs(3);//gene's color and gene's block line
+			saveImgMethod.saveFrame(folderName, treemapOutputFolderName);//(?) no color only gene cluster's line and name -> to show the treemap structure
 			
 			// for testing
 			if(printComments)System.out.println("saved cluster lists");
@@ -116,6 +128,8 @@ public class clusterSplitter {
 		}
 	}
 	
+
+
 	private static void initOptionSettings() {
 		// baby ver
 //		for(int i = 0; i < acceptOptions.length; i ++){
@@ -398,6 +412,9 @@ public class clusterSplitter {
 		clusterSplitter.optionSwitchs = optionSwitchs;
 	}
 
-
+	private static String getTreemapFolderName() {
+		// TODO return the 
+		return null;
+	}
 
 }
