@@ -28,8 +28,8 @@ public class clusterSplitter {
 	private static int userClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
 	private static int idealClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
 	private static int realClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
-	private static char userSplitMood = '|';// -> '+', '-', '/',
-	private static char opeSplitMood = '|';// -> '+', '-', '/',
+	private static char userSplitMode = '|';// -> '+', '-', '/',
+	private static char opeSplitMode = '|';// -> '+', '-', '/',
 	private static File expressionFile;
 	private static File dendrogramFile;
 	private static File outputDir;
@@ -38,9 +38,6 @@ public class clusterSplitter {
 	private static ArrayList<Boolean> optionSwitchs = new ArrayList<Boolean>();// need init <- by acceptOption.length
 	
 //	private static String folderName = null;// "AR0278TM";
-
-	
-
 
 	public static int winW = 2000;
 	public static int winH = 2000;
@@ -98,11 +95,11 @@ public class clusterSplitter {
 //			String treemapOutputFolderName = FileMethod.makeNewDirectory(getTreemapFolderName(), "Treemap").getPath(); 
 			
 			//// -[step2.2]- create and save treemaps
-////			saveImgMethod.saveImgs(0);// or 0x11<=>0x[color][line] G0->[-,-], G1[-,line], G2[color,-], G3[color, line]
+////			saveImgMethod.saveImgs(0);// or 0x11<=>0x[genes' color][genes' line] 0->[-,-], 1[-,line], 2[color,-], 3[color, line]
 ////			saveImgMethod.saveImgs(1);// no color, only gene's block line
-			saveImgMethod.saveImgs(folderName, 2, treemapOutputFolderName);//only genes color -> most useful
+			saveImgMethod.saveImgs("treemap", 2, treemapOutputFolderName);//only genes color -> most useful
 ////			saveImgMethod.saveImgs(3);//gene's color and gene's block line
-			saveImgMethod.saveFrame(folderName, treemapOutputFolderName);//(?) no color only gene cluster's line and name -> to show the treemap structure
+			saveImgMethod.saveFrame("treemap", treemapOutputFolderName);//(?) no color only gene cluster's line and name -> to show the treemap structure
 			
 			// for testing
 			if(printComments)System.out.println("saved cluster lists");
@@ -123,7 +120,7 @@ public class clusterSplitter {
 					System.out.println("finished");
 					System.out.println("maxMidNodeHeightWithLeafChile"+tmObj.getMaxMiNNodeHeightWithLeafChild());
 				}
-				if(printClustNum)System.out.println((userSplitMood) +""+ userClusterNum+" : "+tmObj.getClusterNodeList().size());
+				if(printClustNum)System.out.println((userSplitMode) +""+ userClusterNum+" : "+tmObj.getClusterNodeList().size());
 				System.exit(0);
 			}
 		}
@@ -193,11 +190,11 @@ public class clusterSplitter {
 		//checking are the args[] qualified
 		errorInChecking = false; errorInFlow = true; printComments = false;
 		try {
-			//splitMood and cluster number;
-			setUserSplitMood(a[0].charAt(0));
-			setOpeSplitMood(getUserSplitMood());
+			//splitMode and cluster number;
+			setUserSplitMode(a[0].charAt(0));
+			setOpeSplitMode(getUserSplitMode());
 			userClusterNum = -1;
-			if (getUserSplitMood() == '+' || getUserSplitMood() == '-') {
+			if (getUserSplitMode() == '+' || getUserSplitMode() == '-') {
 				try{
 					userClusterNum = Integer.parseInt(a[0].substring(1));
 				} catch (Exception e) {
@@ -206,11 +203,11 @@ public class clusterSplitter {
 					System.err.println(e);
 				}
 			} else {
-				setUserSplitMood('|');
+				setUserSplitMode('|');
 				userClusterNum = Integer.parseInt(a[0]);
 			}
 			idealClusterNum = userClusterNum;
-			if (printComments) System.out.println("cluster split mood -> " + getUserSplitMood()+ ", num ->" + idealClusterNum);
+			if (printComments) System.out.println("cluster split mood -> " + getUserSplitMode()+ ", num ->" + idealClusterNum);
 
 			// dendrogramFile & expressionFile
 			for(int i = 1; i <= 2; i++){
@@ -382,20 +379,20 @@ public class clusterSplitter {
 		clusterSplitter.inputValueFilePath = inputTableFilePath;
 	}
 
-	public static char getUserSplitMood() {
-		return userSplitMood;
+	public static char getUserSplitMode() {
+		return userSplitMode;
 	}
 
-	public static void setUserSplitMood(char splitMood) {
-		clusterSplitter.userSplitMood = splitMood;
+	public static void setUserSplitMode(char splitMode) {
+		clusterSplitter.userSplitMode = splitMode;
 	}
 
-	public static char getOpeSplitMood() {
-		return opeSplitMood;
+	public static char getOpeSplitMode() {
+		return opeSplitMode;
 	}
 
-	public static void setOpeSplitMood(char opeSplitMood) {
-		clusterSplitter.opeSplitMood = opeSplitMood;
+	public static void setOpeSplitMode(char opeSplitMode) {
+		clusterSplitter.opeSplitMode = opeSplitMode;
 	}
 
 	public static int getUserClusterNum() {

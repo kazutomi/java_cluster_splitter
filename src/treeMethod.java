@@ -47,7 +47,7 @@ public class treeMethod {
 	private Queue<treeNode> firstQueue = new LinkedList<treeNode>();// only for breadth-first branch search;
 	private Queue<treeNode> secondQueue = new LinkedList<treeNode>();// only for breadth-first branch search;
 	private LinkedList<treeNode> nodeList = new LinkedList<treeNode>();// for holding  branches as a list in order of [height];
-	private LinkedList<treeNode> clusterNodeList = new LinkedList<treeNode>();// for cluster. the size() is [custerMun]
+	private LinkedList<treeNode> clusterNodeList = new LinkedList<treeNode>();// for cluster. the .size() is [custerMun]
 	private treeNode[] upperNodeArray;// for create clusterList//@@ del
 	
 //	private treeNode[] midNodeArray;
