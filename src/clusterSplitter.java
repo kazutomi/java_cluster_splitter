@@ -73,36 +73,47 @@ public class clusterSplitter {
 		
 		// checking args[] number
 		boolean errorInFlow = true;// init -> true
-		boolean printComments = false;
+		boolean printComments = true;
 		
 		//init
 		initOptionSettings();
 		checkArgs(args);
 
 		errorInFlow = true;
-		try {// main work flow area
+		boolean errorInData = true;
+		boolean errorInTreemap = true;
+		int progress = 0;
+//		try {// main work flow area
 			
 			// [step 1.1]
 			// make data -> read dedrogram file and make tree then decide the cluster number then make cluster information
 			tmObj.makeData(inputTreeFilePath, inputValueFilePath);// read csv file
+			progress = 0;
 			
 			// [step 1.2]
 			// make output files
 			tmObj.writeFilesForTominagaModule(outputDir);
+			progress = 1;
+			// for testing
+			if(printComments)System.err.println("saved cluster lists");
+			errorInData = false;
+			
 			
 			//// -[step2.1]- make treeMap output folder
 			String treemapOutputFolderName = getOutputDir().getPath();//untested
 //			String treemapOutputFolderName = FileMethod.makeNewDirectory(getTreemapFolderName(), "Treemap").getPath(); 
-			
+			progress = 2;
 			//// -[step2.2]- create and save treemaps
 ////			saveImgMethod.saveImgs(0);// or 0x11<=>0x[genes' color][genes' line] 0->[-,-], 1[-,line], 2[color,-], 3[color, line]
 ////			saveImgMethod.saveImgs(1);// no color, only gene's block line
-			saveImgMethod.saveImgs("treemap", 2, treemapOutputFolderName);//only genes color -> most useful
+			saveImgMethod.saveImgs("treemap", 3, treemapOutputFolderName);//only genes color -> most useful
+			progress = 3;
 ////			saveImgMethod.saveImgs(3);//gene's color and gene's block line
 			saveImgMethod.saveFrame("treemap", treemapOutputFolderName);//(?) no color only gene cluster's line and name -> to show the treemap structure
+			progress = 4;
 			
-			// for testing
-			if(printComments)System.out.println("saved cluster lists");
+			errorInTreemap = false;
+		try {// main work flow area
 			errorInFlow = false;
 		}catch(Exception err){
 		      err.printStackTrace(System.err);
@@ -113,8 +124,15 @@ public class clusterSplitter {
 	    		System.out.println("real  number : "+realClusterNum);
 	    	}
 			if (errorInFlow) {
-				System.err.println("error in makeData and writeData");
-				System.exit(1);
+				System.err.println("succesful progress number is "+progress);
+				if(errorInData){
+					System.err.println("error in makeData and writeData");
+					System.exit(1);
+				}
+				if(errorInTreemap){
+					System.err.println("error in makeing treemap");
+					System.exit(2);
+				}
 			} else {
 				if(printComments){
 					System.out.println("finished");

@@ -57,7 +57,7 @@ public class saveImgMethod {
 //	private static int clusterNum;
 	
 
-	private static treeMethod mtObj; // = ControllMethod.tmObj;
+	private static treeMethod mtObj = clusterSplitter.tmObj;
 	private static LinkedList<treeNode> frameNodeList = new LinkedList<treeNode>();// for draw frames -> mainly for clusters
 	private static LinkedList<treeNode> coatNodeList = new LinkedList<treeNode>();// for dras blocks -> mainly for each gene
 	

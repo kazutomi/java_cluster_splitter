@@ -1095,7 +1095,7 @@ public class treeMethod {
 			//make resultList
 			if(printComment){
 				System.out.println("-- Start to make tempList and resultList --");
-				System.out.println("idealCN : "+clusterSplitter.getUserSplitMood()+""+clusterSplitter.getIdealClusterNum());
+				System.out.println("idealCN : "+clusterSplitter.getUserSplitMode()+""+clusterSplitter.getIdealClusterNum());
 				System.out.println("maxHeight : "+maxHeight);
 			}
 			while(!resultListCompleat){
@@ -1168,7 +1168,7 @@ public class treeMethod {
 			 * 		return rsultList
 			 * 	else // conditions that will return resultLis.sublist even (tarNode.height == getLst.height)
 			 * 		if preIndex > 0 -> [0].height != tarNode.height
-			 * 			if splitMood = '-' || (splitMood = '|' && (result.siz()-(idealClstNum-1)) >((idealClstNum -1) - (preIndex +1)) //until the gap between + and clusterNum is bigger than - and clusterNum
+			 * 			if splitMode = '-' || (splitMode = '|' && (result.siz()-(idealClstNum-1)) >((idealClstNum -1) - (preIndex +1)) //until the gap between + and clusterNum is bigger than - and clusterNum
 			 * 				return resultList.sublist(0:preIndex+1)
 			 * else// continue to add tarNode to resultList
 			 * 	resultList.add(tarNode);
@@ -1199,9 +1199,9 @@ public class treeMethod {
 					}
 				}else{// (resultList.size > 0) && (same height to next)
 					if(resultListHasMinSiz){// (resultList.size > 0) && (same height to next)&&(resultList has minSiz)
-							if((clusterSplitter.getUserSplitMood() == '-')
+							if((clusterSplitter.getUserSplitMode() == '-')
 									||
-								(clusterSplitter.getUserSplitMood() == '|') && (resultList.size()-(clusterSplitter.getIdealClusterNum() -1)) >= ((clusterSplitter.getIdealClusterNum()-1) - (preDifIndex+1))){
+								(clusterSplitter.getUserSplitMode() == '|') && (resultList.size()-(clusterSplitter.getIdealClusterNum() -1)) >= ((clusterSplitter.getIdealClusterNum()-1) - (preDifIndex+1))){
 								// (resultList.size > 0)&&(same height to next)&&(resultList has minSiz)&&(NO preDifIndex)&&(mood=='|')&&(too much node's after idealCN)
 								resultListCompleat = true;
 					  			List<treeNode> subList = resultList.subList(preDifIndex+1, resultList.size());
@@ -1226,9 +1226,9 @@ public class treeMethod {
 					 return;
 				 }
 				 if(tarNode.getHeight() == resultList.getLast().getHeight()){ // conditions that will return resultLis.sublist even (tarNode.height == getLst.height)					 
-					  	if((clusterSplitter.getUserSplitMood() == '-')
+					  	if((clusterSplitter.getUserSplitMode() == '-')
 					  		||
-					  		(clusterSplitter.getUserSplitMood() == '|' )
+					  		(clusterSplitter.getUserSplitMode() == '|' )
 				  				&& (resultList.size()-(clusterSplitter.getIdealClusterNum() -1)) >= ((clusterSplitter.getIdealClusterNum()-1) - (preDifIndex+1))){ //until the gap between + and clusterNum is bigger than - and clusterNum
 				  			resultListCompleat = true;
 				  			List<treeNode> subList = resultList.subList(preDifIndex+1, resultList.size());
