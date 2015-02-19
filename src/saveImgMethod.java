@@ -57,7 +57,7 @@ public class saveImgMethod {
 //	private static int clusterNum;
 	
 
-	private static treeMethod mtObj = clusterSplitter.tmObj;
+	private static treeMethod tmObj = clusterSplitter.tmObj;
 	private static LinkedList<treeNode> frameNodeList = new LinkedList<treeNode>();// for draw frames -> mainly for clusters
 	private static LinkedList<treeNode> coatNodeList = new LinkedList<treeNode>();// for dras blocks -> mainly for each gene
 	
@@ -80,10 +80,10 @@ public class saveImgMethod {
 	private static treeNode tn;
 	
 	// values for recursive usage in drawing process
-	private static double TMX = mtObj.getTreemapX();
-	private static double TMY = mtObj.getTreemapY();
-	private static double TMW = mtObj.getTreemapW();
-	private static double TMH = mtObj.getTreemapH();
+	private static double TMX = tmObj.getTreemapX();
+	private static double TMY = tmObj.getTreemapY();
+	private static double TMW = tmObj.getTreemapW();
+	private static double TMH = tmObj.getTreemapH();
 
 	public static void saveImg(){
 
@@ -134,7 +134,7 @@ public class saveImgMethod {
 		//     make directory for the files      //
 		//////////////////////////////////////////
 //		System.out.println("cluster num -> "+controllMethod.getClusterNum()+"controll -> "+controllMethod.getClusterNum());//@test
-		String folderName = path+"/"+saveImgMethod.fileName+"_G"+G+"C"+mtObj.getClusterList().size()+"_pix"+(int)saveImgMethod.TMW;
+		String folderName = path+"/"+saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"_pix"+(int)saveImgMethod.TMW;
 		File theDir = new File(folderName);
 
 		// if the directory does not exist, create it
@@ -151,8 +151,8 @@ public class saveImgMethod {
 		//            for all TIME POINT          //
 		///////////////////////////////////////////
 		//		System.out.println("enter saveImg");
-		saveImgMethod.tn = mtObj.root;//@del @@ you should do not use all target node as tn after this.
-		for(int t = 0; t < mtObj.root.getValue().size()/**/; t ++){
+		saveImgMethod.tn = tmObj.root;//@del @@ you should do not use all target node as tn after this.
+		for(int t = 0; t < tmObj.root.getValue().size()/**/; t ++){
 //			System.out.println("tn.getValue().size() -> " +tn.getValue().size());
 			try {
 
@@ -178,9 +178,9 @@ public class saveImgMethod {
 				/////////////////////////////
 				if(G < 2){// no color
 					treeNode locCluster;
-					for (int i = 0; i < mtObj.getClusterList().size(); i++) {
+					for (int i = 0; i < tmObj.getClusterList().size(); i++) {
 //						tn = mtObj.getClusterList().get(i);//@del get cluster note
-						locCluster = mtObj.getClusterList().get(i);// get cluster note
+						locCluster = tmObj.getClusterList().get(i);// get cluster note
 						//						
 						Color colYtoB, colB, colY;
 //						float [] colfYtoB = new float[3];
@@ -211,7 +211,7 @@ public class saveImgMethod {
 				//  [draw / fill] for each GENE block //
 				///////////////////////////////////////
 				//			System.out.println("before GENE");
-				treeNode locLeaf = mtObj.getFirstLeaf();
+				treeNode locLeaf = tmObj.getFirstLeaf();
 //				tn = mtObj.getFirstLeaf();//@del
 //				locLeaf.printNodeAllInfo();//@test
 				while (locLeaf != null) {
@@ -262,9 +262,9 @@ public class saveImgMethod {
 				////////////////////////////
 				//			System.out.println("before line");
 				if(true){
-					for (int i = mtObj.getClusterList().size() - 2; i >= 0; i--) {// 100 cluster -> i = 98(100-2), 25
+					for (int i = tmObj.getClusterList().size() - 2; i >= 0; i--) {// 100 cluster -> i = 98(100-2), 25
 						// cluster -> i = 23 (25-2)  because... if you draw 1 line it's for 2 cluster, if you set the i 10 then 10->0, it draws 11 times
-						treeNode locCluster = mtObj.getBranchArray()[i];
+						treeNode locCluster = tmObj.getBranchArray()[i];
 //						tn = mtObj.branchArray[i];//@del
 
 						// float hue = (float) (i*1.0/mtObj.branchArray.length * 0.7 + 0.25);
@@ -284,7 +284,7 @@ public class saveImgMethod {
 				//			System.out.println("before save img");
 				//				String timePoint = ""+(t+1);
 				String timePoint = String.format("%02d", (t+1));
-				String outputName = saveImgMethod.fileName+"_G"+G+"C"+mtObj.getClusterList().size()+"T"+timePoint+".PNG";
+				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".PNG";
 				ImageIO.write(bi, "PNG", new File(folderName +"/"+ outputName));
 				System.out.println("saved img "+outputName);
 				//			ImageIO.write(bi, "JPEG", new File("c:\\yourImageName.JPG"));
@@ -303,6 +303,7 @@ public class saveImgMethod {
 	}
 
 	public static void saveFrame(String name, String path) {
+		boolean printComment = false;
 		saveImgMethod.setFileName(name);
 		try {
 			BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -316,8 +317,15 @@ public class saveImgMethod {
 			// [draw / fill] for each CLUSTER color  //
 			//////////////////////////////////////////
 			//			System.out.println("before cluster");
-			for (int i = 0; i < mtObj.getClusterList().size(); i++) {
-				tn = mtObj.getClusterList().get(i);// get cluster note
+			for (int i = 0; i < tmObj.getClusterList().size(); i++) {//XXX
+				
+				//get target node
+				tn = tmObj.getClusterList().get(i);// get cluster note
+				
+				// for checking cluster nodes
+				if(printComment){System.err.println("for draw frame: node number = "+i+", node pos = "+tn.getNodePos());}
+				
+				
 				double cluX = tn.getTMX() * TMW + TMX;
 				double cluY = tn.getTMY() * TMH + TMY;
 				double cluW = tn.getTMW() * TMW;
@@ -336,8 +344,8 @@ public class saveImgMethod {
 				ig2.draw(new Rectangle2D.Double(cluX, cluY, cluW, cluH));
 			}
 
-			for (int i = 0; i < mtObj.getClusterList().size(); i++) {
-				tn = mtObj.getClusterList().get(i);// get cluster note
+			for (int i = 0; i < tmObj.getClusterList().size(); i++) {
+				tn = tmObj.getClusterList().get(i);// get cluster note
 				double cluX = tn.getTMX() * TMW + TMX;
 				double cluY = tn.getTMY() * TMH + TMY;
 				double cluW = tn.getTMW() * TMW;
@@ -361,9 +369,9 @@ public class saveImgMethod {
 			/////////////////////////////
 			//			System.out.println("before save img");
 
-			String outputName = saveImgMethod.fileName+"FrameC"+mtObj.getClusterList().size()+".PNG";
+			String outputName = saveImgMethod.fileName+"FrameC"+tmObj.getClusterList().size()+".PNG";
 			ImageIO.write(bi, "PNG", new File(path+"/"+outputName));
-			System.out.println("saved img "+outputName);
+			System.err.println("saved img "+outputName);
 			//			ImageIO.write(bi, "JPEG", new File("c:\\yourImageName.JPG"));
 			//			ImageIO.write(bi, "gif", new File("c:\\yourImageName.GIF"));
 			//			ImageIO.write(bi, "BMP", new File("c:\\yourImageName.BMP"));

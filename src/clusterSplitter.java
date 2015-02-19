@@ -73,7 +73,7 @@ public class clusterSplitter {
 		
 		// checking args[] number
 		boolean errorInFlow = true;// init -> true
-		boolean printComments = true;
+		boolean printComments = false;
 		
 		//init
 		initOptionSettings();
@@ -83,7 +83,7 @@ public class clusterSplitter {
 		boolean errorInData = true;
 		boolean errorInTreemap = true;
 		int progress = 0;
-//		try {// main work flow area
+		try {// main work flow area
 			
 			// [step 1.1]
 			// make data -> read dedrogram file and make tree then decide the cluster number then make cluster information
@@ -94,6 +94,15 @@ public class clusterSplitter {
 			// make output files
 			tmObj.writeFilesForTominagaModule(outputDir);
 			progress = 1;
+			
+			/* for checking cluster nodes
+			ListIterator litr = tmObj.getClusterNodeList().listIterator();
+			while(litr.hasNext()){
+				treeNode tarNode = (treeNode) litr.next();
+				System.err.println(tarNode.getHira()+"-"+tarNode.getHorz()+"("+tarNode.getHeight()+"), ");
+			}
+			*/
+			
 			// for testing
 			if(printComments)System.err.println("saved cluster lists");
 			errorInData = false;
@@ -113,7 +122,6 @@ public class clusterSplitter {
 			progress = 4;
 			
 			errorInTreemap = false;
-		try {// main work flow area
 			errorInFlow = false;
 		}catch(Exception err){
 		      err.printStackTrace(System.err);
