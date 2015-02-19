@@ -130,8 +130,8 @@ public class treeMethod {
 //		makeAllMidpoint();//make mid point (for dendrogram's vertical lines position)
 //		this.printAllLeaves();//@test
 		
-//		initAllTMInfo(root);//whats this?// set treemap info
-		if(printComment) System.out.println("set Treemap normalized information for all nodes.\n");
+		initAllTMInfo(root);// set treemap info -> set each nodes' (x, y, w, h, r) for treemap
+		if(printComment) System.err.println("set Treemap normalized information for all nodes.\n");
 		
 //		this.printAllNodes();//@test
 		
