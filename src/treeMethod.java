@@ -52,7 +52,7 @@ public class treeMethod {
 	
 //	private treeNode[] midNodeArray;
 	ArrayList<String> tableDataString = new ArrayList<String>();
-//	ArrayList<ArrayList<String>> dataTable = new ArrayList<ArrayList<String>>();
+	ArrayList<ArrayList<String>> dataTable = new ArrayList<ArrayList<String>>();
 	private String tableHeader = "";
 
 	// constructor
@@ -65,13 +65,13 @@ public class treeMethod {
 //		this.clusteringFileName = fn+"_clusterP.txt";
 //	}
 	public void makeData(String treeFile, String valueFile){//@@@
-		boolean printData = false;
+		boolean printData = true;
 		this.timepointFileName = valueFile;//@@@
 		this.clusteringFileName = treeFile;//@@@
 		
 		this.readTableFile(timepointFileName);// read csv file
 //		this.makeTableHeader();
-//		if(printData)printDataTable();
+		if(printData)printDataTable();
 		
 		this.makeDendrogramTree(clusteringFileName);// making ("text/"+fn+".csv") ("text/AR0278_1_Signal2_nrdt.txt") tree using btObj as the root;
 		this.decideClusterAutoNum();
@@ -126,7 +126,7 @@ public class treeMethod {
 		initeTreemap(x, y, w, h);// for whole tree map.
 		this.root.setTMFigures(0.0, 0.0, 1.0, 1.0, h / w);
 		this.firstLeaf = null;
-		makeLeafList(this.root);// make a list only contain leafs. -> very important list!!
+		makeLeafList(this.root);// make a list only contain leafs. -> a very important list!!
 //		makeAllMidpoint();//make mid point (for dendrogram's vertical lines position)
 //		this.printAllLeaves();//@test
 		
@@ -135,7 +135,7 @@ public class treeMethod {
 		
 //		this.printAllNodes();//@test
 		
-		/**
+		/*
 		//@@@@
 		 * makeMidnodeList for cluster split
 		 * most important change in the new vertion!!;
@@ -143,7 +143,7 @@ public class treeMethod {
 		 *
 		 */
 		makeInnerNodeMethodNew();
-//		makeClusterValue();
+		makeClusterValue();
 		
 //		printAllTree();//@test
 		
@@ -362,8 +362,9 @@ public class treeMethod {
 	// }
 
 	void makeLeafList(treeNode q) {
+		boolean printComments = true;
 		treeNode tn = q;
-//		 System.out.println("into a makeLeafList(**)");//@@@test
+		if(printComments)System.err.println("into a makeLeafList(**)");//@@@test
 		if (tn.isLeaf()) {
 			if (firstLeaf == null) {
 				firstLeaf = tn;
@@ -379,7 +380,8 @@ public class treeMethod {
 			// ""))).get(0));
 			//int l = Integer.parseInt(nt.getName().replaceAll("L", ""));
 			
-			/*
+			
+			// dataTable is used for treemap time points
 			int l = tn.getTableLine();
 			tn.setProbeID(this.dataTable.get(l).get(0));
 			int rowSize = this.dataTable.get(0).size();
@@ -387,24 +389,24 @@ public class treeMethod {
 				tn.setGeneSymbol(this.dataTable.get(l).get(rowSize - 1));
 				
 			}
-			*/
+			
 			
 			////
 			//// convert text to double for treeNode value
 			////
-//			Double d;
-////			System.out.println(rowSize);
-//			for (int i = 1; i <= rowSize-2; i++) {//rowSize-2 because the last row is GO symbols
-////				System.out.println("i="+i+"->"+this.dataTable.get(l).get(i));
-//				d = Double.parseDouble(this.dataTable.get(l).get(i)) + clusterSplitter.getSuppValue();
-//				tn.addValue(d);
-//				if ((tn.getValueMax() == -1) || (d > tn.getValueMax())) {
-//					tn.setValueMax(d);
-//				}
-//				if ((tn.getValueMin() == -1) || (d < tn.getValueMin())) {
-//					tn.setValueMin(d);
-//				}
-//			}
+			Double d;
+			if(printComments)System.err.println("original rowSize is " + rowSize);
+			for (int i = 1; i <= rowSize-1; i++) {// rowSize-1 because the 1st row is ProbID(name) / if the last row is GO symbols then it should be rowSize-2
+				if(printComments)System.err.println("i="+i+"->"+this.dataTable.get(l).get(i));
+				d = Double.parseDouble(this.dataTable.get(l).get(i)) + clusterSplitter.getSuppValue();
+				tn.addValue(d);
+				if ((tn.getValueMax() == -1) || (d > tn.getValueMax())) {
+					tn.setValueMax(d);
+				}
+				if ((tn.getValueMin() == -1) || (d < tn.getValueMin())) {
+					tn.setValueMin(d);
+				}
+			}
 
 		} else {
 			if (tn.left != null) {
@@ -431,6 +433,7 @@ public class treeMethod {
 
 
 	public void makeClusterValue() {// search tree in breadth first order;
+		boolean printComments = true;
 		ArrayList<treeNode> nodeArrayBF = new ArrayList<treeNode>(); // node in
 		// BreadthFirst
 		// order
@@ -453,9 +456,9 @@ public class treeMethod {
 		//
 		for (int i = nodeArrayBF.size() - 1; i >= 0; i--) {
 			tn = nodeArrayBF.get(i);
-			//			System.out.println("[" + i + "]=>" + tn.getHira() + "-"+ tn.getHorz());
+			if(printComments)System.err.println("[" + i + "]=>" + tn.getHira() + "-"+ tn.getHorz());
 			tn.makeClusterValues();
-			//System.out.println("[" + i + "]=>[" + tn.getHira() + "-"+ tn.getHorz()+"] => Value[" + tn.getValue().size()+"]");
+			if(printComments)System.err.println("[" + i + "]=>[" + tn.getHira() + "-"+ tn.getHorz()+"] => Value[" + tn.getValue().size()+"]");
 		}
 
 	}
@@ -584,7 +587,7 @@ public class treeMethod {
 
 			while ((SLine = br.readLine()) != null) {
 				fillTableDataString(SLine);
-//				fillDataTable(SLine.trim());
+				fillDataTable(SLine.trim());
 			}
 
 		} catch (IOException e) {
@@ -621,19 +624,16 @@ public class treeMethod {
 		tableDataString.add(sLine);
 	}
 
-	/*
+	
 	void fillDataTable(String l) {
 		this.dataTable.add(new ArrayList<String>());
 		String[] elements = l.split(",");
 		for (int i = 0; i < elements.length; i++) {
 			dataTable.get(dataTable.size() - 1).add(elements[i]);
 		}
-		//!!!!!!!! dont use this!!!!!!!!!//
-//		while (this.dataTable.get(this.dataTable.size() - 1).size() < 17) {
-//			dataTable.get(dataTable.size() - 1).add("NULL");
-//		}
+
 	}
-	*/
+	
 
 	void readDendrogramFile(String filePath) {// make a new class and functuion -> readfunc(this)
 		boolean printComment = false;
@@ -880,7 +880,7 @@ public class treeMethod {
 		System.out.println("^^^ tree");//@system
 	}
 	
-	/*
+	
 	void printDataTable() {
 		// System.out.println(dataTable);
 		for (int i = 0; i < dataTable.size(); i++) {
@@ -890,7 +890,7 @@ public class treeMethod {
 			System.out.println();
 		}
 	}
-	*/
+	
 	
 	//@@@
 	private void initeLeafNodeNum(){

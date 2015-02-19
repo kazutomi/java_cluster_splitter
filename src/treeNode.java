@@ -373,8 +373,8 @@ public class treeNode {
 	
 
 	public void makeClusterValues() {
-//		System.out.println("left = " + this.left.getValue().size());
-//		System.out.println("right = " + this.right.getValue().size());
+//		System.err.println("left = " + this.left.getValue().size());
+//		System.err.println("right = " + this.right.getValue().size());
 
 		ArrayList<Double> leftValue = this.left.getValue();
 		ArrayList<Double> rightValue = this.right.getValue();

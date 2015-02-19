@@ -120,6 +120,8 @@ public class saveImgMethod {
 	
 	
 	public static void saveImgs(String name, int G, String path) {// or 0x11<=>0x[color][line] G0->[-,-], G1[-,line], G2[color,-], G3[color, line]
+		boolean printComments = true;
+		
 		saveImgMethod.setFileName(name);
 		//		int width = controllMethod.winW;
 		//		int height = controllMethod.winH;
@@ -139,11 +141,13 @@ public class saveImgMethod {
 
 		// if the directory does not exist, create it
 		if (!theDir.exists()) {
-			System.out.println("creating directory: " + folderName);
+			System.err.println("creating directory: " + folderName);
 			boolean result = theDir.mkdir();  
 
 			if(result) {    
-				System.out.println("DIR created");  
+				System.err.println("created new directory: " + folderName);  
+			}else {
+				System.err.println("could not create the new directory: " + folderName); 
 			}
 		}
 
@@ -152,6 +156,11 @@ public class saveImgMethod {
 		///////////////////////////////////////////
 		//		System.out.println("enter saveImg");
 		saveImgMethod.tn = tmObj.root;//@del @@ you should do not use all target node as tn after this.
+		
+		if(printComments){
+			System.err.println("the dataset time point from root node = "+ tmObj.root.getValue().size());
+			}
+		
 		for(int t = 0; t < tmObj.root.getValue().size()/**/; t ++){
 //			System.out.println("tn.getValue().size() -> " +tn.getValue().size());
 			try {
