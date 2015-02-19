@@ -96,11 +96,11 @@ public class saveImgMethod {
 //
 //		// if the directory does not exist, create it
 //		if (!newDir.exists()) {
-//			System.out.println("creating directory: " + folderName);
+//			System.err.println("creating directory: " + folderName);
 //			boolean result = newDir.mkdir();  
 //
 //			if(result) {    
-//				System.out.println("DIR created");  
+//				System.err.println("DIR created");  
 //			}else{//Error couldnt made the folder
 //				
 //			}
@@ -135,7 +135,7 @@ public class saveImgMethod {
 		////////////////////////////////////////////
 		//     make directory for the files      //
 		//////////////////////////////////////////
-//		System.out.println("cluster num -> "+controllMethod.getClusterNum()+"controll -> "+controllMethod.getClusterNum());//@test
+//		System.err.println("cluster num -> "+controllMethod.getClusterNum()+"controll -> "+controllMethod.getClusterNum());//@test
 		String folderName = path+"/"+saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"_pix"+(int)saveImgMethod.TMW;
 		File theDir = new File(folderName);
 
@@ -154,7 +154,7 @@ public class saveImgMethod {
 		/////////////////////////////////////////////
 		//            for all TIME POINT          //
 		///////////////////////////////////////////
-		//		System.out.println("enter saveImg");
+		//		System.err.println("enter saveImg");
 		saveImgMethod.tn = tmObj.root;//@del @@ you should do not use all target node as tn after this.
 		
 		if(printComments){
@@ -162,10 +162,10 @@ public class saveImgMethod {
 			}
 		
 		for(int t = 0; t < tmObj.root.getValue().size()/**/; t ++){
-//			System.out.println("tn.getValue().size() -> " +tn.getValue().size());
+//			System.err.println("tn.getValue().size() -> " +tn.getValue().size());
 			try {
 
-				//				System.out.println("enter try");
+				//				System.err.println("enter try");
 
 				// TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
 				// into integer pixels
@@ -179,7 +179,7 @@ public class saveImgMethod {
 				////////////////////////////////////////////
 				// [draw / fill] for each CLUSTER color  //
 				//////////////////////////////////////////
-				//			System.out.println("before cluster");
+				//			System.err.println("before cluster");
 
 
 				///////////////////////////////
@@ -213,13 +213,13 @@ public class saveImgMethod {
 						}
 					}
 				}
-				//			System.out.println("out cluster");
+				//			System.err.println("out cluster");
 
 
 				/////////////////////////////////////////
 				//  [draw / fill] for each GENE block //
 				///////////////////////////////////////
-				//			System.out.println("before GENE");
+				//			System.err.println("before GENE");
 				treeNode locLeaf = tmObj.getFirstLeaf();
 //				tn = mtObj.getFirstLeaf();//@del
 //				locLeaf.printNodeAllInfo();//@test
@@ -236,7 +236,7 @@ public class saveImgMethod {
 					if(G > 1){
 						Color colYtoB;
 						float R = (float)((locLeaf.getValue(t)-locLeaf.getValueMin())/(locLeaf.getValueMax()-locLeaf.getValueMin()));
-						//					System.out.println(R);
+						//					System.err.println(R);
 						//					colYtoB = blend2Colors(Color.YELLOW, Color.BLUE, ((tn.getValue(0)-tn.getValueMin())/(tn.getValueMax()-tn.getValueMin())));
 
 						Color colY = new Color((int)Color.YELLOW.getRed(),(int)Color.YELLOW.getGreen(), (int)Color.YELLOW.getBlue(), (int)((1.0-R) *Color.YELLOW.getAlpha()));   //@       //
@@ -264,12 +264,12 @@ public class saveImgMethod {
 					locLeaf = locLeaf.getNextLeaf();
 					// j++;
 				}
-				//				System.out.println("out GENE");
+				//				System.err.println("out GENE");
 
 				//////////////////////////////
 				//  draw for cluster LINE  //
 				////////////////////////////
-				//			System.out.println("before line");
+				//			System.err.println("before line");
 				if(true){
 					for (int i = tmObj.getClusterList().size() - 2; i >= 0; i--) {// 100 cluster -> i = 98(100-2), 25
 						// cluster -> i = 23 (25-2)  because... if you draw 1 line it's for 2 cluster, if you set the i 10 then 10->0, it draws 11 times
@@ -290,12 +290,12 @@ public class saveImgMethod {
 				///////////////////////////////
 				// decide file name to save //
 				/////////////////////////////
-				//			System.out.println("before save img");
+				//			System.err.println("before save img");
 				//				String timePoint = ""+(t+1);
 				String timePoint = String.format("%02d", (t+1));
 				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".PNG";
 				ImageIO.write(bi, "PNG", new File(folderName +"/"+ outputName));
-				System.out.println("saved img "+outputName);
+				System.err.println("saved img "+outputName);
 				//			ImageIO.write(bi, "JPEG", new File("c:\\yourImageName.JPG"));
 				//			ImageIO.write(bi, "gif", new File("c:\\yourImageName.GIF"));
 				//			ImageIO.write(bi, "BMP", new File("c:\\yourImageName.BMP"));
@@ -304,10 +304,10 @@ public class saveImgMethod {
 				//end of saving images
 			} catch (IOException ie) {
 				ie.printStackTrace();
-				System.out.println("error in save img");
+				System.err.println("error in save img");
 			}
-//			System.out.println("save done -> t ="+ t +", tn.getValue().size() -> *");//@test
-//			System.out.println("save done -> t ="+ t +", tn.getValue().size() ->"+tn.getValue().size());//@test
+//			System.err.println("save done -> t ="+ t +", tn.getValue().size() -> *");//@test
+//			System.err.println("save done -> t ="+ t +", tn.getValue().size() ->"+tn.getValue().size());//@test
 		}
 	}
 
@@ -325,7 +325,7 @@ public class saveImgMethod {
 			////////////////////////////////////////////
 			// [draw / fill] for each CLUSTER color  //
 			//////////////////////////////////////////
-			//			System.out.println("before cluster");
+			//			System.err.println("before cluster");
 			for (int i = 0; i < tmObj.getClusterList().size(); i++) {//XXX
 				
 				//get target node
@@ -376,7 +376,7 @@ public class saveImgMethod {
 			///////////////////////////////
 			// decide file name to save //
 			/////////////////////////////
-			//			System.out.println("before save img");
+			//			System.err.println("before save img");
 
 			String outputName = saveImgMethod.fileName+"FrameC"+tmObj.getClusterList().size()+".PNG";
 			ImageIO.write(bi, "PNG", new File(path+"/"+outputName));
@@ -389,7 +389,7 @@ public class saveImgMethod {
 			//end of saving images
 		} catch (IOException ie) {
 			ie.printStackTrace();
-			System.out.println("error in save img");
+			System.err.println("error in save img");
 		}
 
 

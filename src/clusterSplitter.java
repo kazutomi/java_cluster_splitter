@@ -115,7 +115,7 @@ public class clusterSplitter {
 			//// -[step2.2]- create and save treemaps
 ////			saveImgMethod.saveImgs(0);// or 0x11<=>0x[genes' color][genes' line] 0->[-,-], 1[-,line], 2[color,-], 3[color, line]
 ////			saveImgMethod.saveImgs(1);// no color, only gene's block line
-			saveImgMethod.saveImgs("treemap", 3, treemapOutputFolderName);//only genes color -> most useful
+			saveImgMethod.saveImgs("treemap", 2, treemapOutputFolderName);//only genes color -> most useful
 			progress = 3;
 ////			saveImgMethod.saveImgs(3);//gene's color and gene's block line
 			saveImgMethod.saveFrame("treemap", treemapOutputFolderName);//(?) no color only gene cluster's line and name -> to show the treemap structure
@@ -127,9 +127,9 @@ public class clusterSplitter {
 		      err.printStackTrace(System.err);
 	    }finally {
 	    	if(printComments){
-	    		System.out.println("user  number : "+userClusterNum);
-	    		System.out.println("ideal number : "+idealClusterNum);
-	    		System.out.println("real  number : "+realClusterNum);
+	    		System.err.println("user  number : "+userClusterNum);
+	    		System.err.println("ideal number : "+idealClusterNum);
+	    		System.err.println("real  number : "+realClusterNum);
 	    	}
 			if (errorInFlow) {
 				System.err.println("succesful progress number is "+progress);
@@ -143,10 +143,10 @@ public class clusterSplitter {
 				}
 			} else {
 				if(printComments){
-					System.out.println("finished");
-					System.out.println("maxMidNodeHeightWithLeafChile"+tmObj.getMaxMiNNodeHeightWithLeafChild());
+					System.err.println("finished");
+					System.err.println("maxMidNodeHeightWithLeafChile"+tmObj.getMaxMiNNodeHeightWithLeafChild());
 				}
-				if(printClustNum)System.out.println((userSplitMode) +""+ userClusterNum+" : "+tmObj.getClusterNodeList().size());
+				if(printClustNum)System.err.println((userSplitMode) +""+ userClusterNum+" : "+tmObj.getClusterNodeList().size());
 				System.exit(0);
 			}
 		}
@@ -206,11 +206,11 @@ public class clusterSplitter {
 		boolean errorInChecking = false;// init -> false;
 		boolean printComments = false;
 		if(printComments){
-			System.out.println("args:");
+			System.err.println("args:");
 			for(String s:a){
-				System.out.println(s);
+				System.err.println(s);
 			}
-			System.out.println();
+			System.err.println();
 		}
 		
 		//checking are the args[] qualified
@@ -233,7 +233,7 @@ public class clusterSplitter {
 				userClusterNum = Integer.parseInt(a[0]);
 			}
 			idealClusterNum = userClusterNum;
-			if (printComments) System.out.println("cluster split mood -> " + getUserSplitMode()+ ", num ->" + idealClusterNum);
+			if (printComments) System.err.println("cluster split mood -> " + getUserSplitMode()+ ", num ->" + idealClusterNum);
 
 			// dendrogramFile & expressionFile
 			for(int i = 1; i <= 2; i++){
@@ -247,7 +247,7 @@ public class clusterSplitter {
 		            		setInputTreeFilePath(f.getPath());
 		            		break;
 					}
-					if(printComments)System.out.println(a[i]+" is a file");
+					if(printComments)System.err.println(a[i]+" is a file");
 				}else{
 					System.err.println(errorHeader+ a[i]+" is not a file or does not exist");
 					errorInChecking = true;
@@ -259,7 +259,7 @@ public class clusterSplitter {
 			if(f.exists() && f.isDirectory()){
 
 				setOutputDir(f);// untested // outputDir = f;
-				if(printComments)System.out.println(a[3]+"is a directry");
+				if(printComments)System.err.println(a[3]+"is a directry");
 			} else{
 				System.err.println(errorHeader+ a[3]+" is not a directry or does not exist");
 				errorInChecking = true;
@@ -301,15 +301,15 @@ public class clusterSplitter {
 	}
 
 	private static void printOptionSwitchs(){// TODO
-		System.out.print("optionSwitchs : ");
+		System.err.print("optionSwitchs : ");
 		ListIterator<Boolean> litr = getOptionSwitchs().listIterator();
 		for(boolean sw : getOptionSwitchs()){
-			System.out.print(sw+", ");
+			System.err.print(sw+", ");
 		}
 //		while(litr.hasNext()){
-//			System.out.print(litr+", ");
+//			System.err.print(litr+", ");
 //		}
-		System.out.println("");
+		System.err.println("");
 	}
 	
 	

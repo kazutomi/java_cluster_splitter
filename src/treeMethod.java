@@ -85,15 +85,15 @@ public class treeMethod {
 		boolean printComment = false;
 		readDendrogramFile(filePath);// dendrogram file from R
 		if(printComment){
-			System.out.println("----------^^ read tree ^^------------\n");		
+			System.err.println("----------^^ read tree ^^------------\n");		
 			if (clusterSplitter.tnObj != root) {
-				System.out.println("couldn't back to root savely. the structure is wrong...");
+				System.err.println("couldn't back to root savely. the structure is wrong...");
 				System.exit(1);
 			} else {
-				System.out.println("back to root savely.\n");
+				System.err.println("back to root savely.\n");
 				// this.root.printNode();
 
-//			System.out.println("----------^^ sohw read tree ^^------------\n");
+//			System.err.println("----------^^ sohw read tree ^^------------\n");
 			}
 		}
 
@@ -101,7 +101,7 @@ public class treeMethod {
 
 	private void decideClusterAutoNum(){// make the clusterAutoNum = log10(leaf node number)
 		boolean printComments = false;
-		if (printComments)System.out.println("\nuser setting cluster number -> "+clusterSplitter.getUserClusterNum());
+		if (printComments)System.err.println("\nuser setting cluster number -> "+clusterSplitter.getUserClusterNum());
 		if(clusterSplitter.getUserClusterNum() == 0){
 			int c = (int)Math.round(50.0 * Math.log10((double)(this.getLeafNodeNum()))  -140.05149978319912);
 //			int c = (int)Math.rint(21.714724095162598 * Math.log10((double)(this.getLeafNodeNum())  -140.05149978319912));
@@ -114,7 +114,7 @@ public class treeMethod {
 			clusterSplitter.setIdealClusterNum(c);
 			
 			if (printComments){
-				System.out.println("adjusted cluster number -> " +c+"\n");
+				System.err.println("adjusted cluster number -> " +c+"\n");
 			}
 		}
 	}
@@ -152,8 +152,8 @@ public class treeMethod {
 	private void makeInnerNodeMethodNew(){
 		boolean printComment = false;//XXX comment XXX 
 		MidnodeListMethod mm = new MidnodeListMethod();
-		this.upperNodeArray = mm.makeMidNodesLists(this.root, this.maxMiNNodeHeightWithLeafChild);//System.out.println("midNodeArrau done");
-		if(printComment) System.out.println(upperNodeArray.length);
+		this.upperNodeArray = mm.makeMidNodesLists(this.root, this.maxMiNNodeHeightWithLeafChild);//System.err.println("midNodeArrau done");
+		if(printComment) System.err.println(upperNodeArray.length);
 		clusterSplitter.setRealClusterNum(upperNodeArray.length+1);
 //		this.setHeightNumInMidNodeArray();
 		makeClusterNodeList(clusterSplitter.getRealClusterNum());//need //
@@ -208,7 +208,7 @@ public class treeMethod {
 		// queue.add(this.root);
 		nodeList.add(this.root);
 		putChildrenToQue(this.root);
-		// System.out.println("branchLList.size ="+branchLList.size());
+		// System.err.println("branchLList.size ="+branchLList.size());
 
 		while (!firstQueue.isEmpty()) {//search nodes as breadth first //@@@ we beed a new queue for holding what is the next node should be in the queue for addNodeList 
 			tn = firstQueue.poll();
@@ -262,17 +262,17 @@ public class treeMethod {
 
 	private void addNewNodeList(treeNode c) {// with bubble sort method
 		int index = nodeList.size() - 1;
-		// System.out.println("index ="+index);
+		// System.err.println("index ="+index);
 		while (true) {
-			// System.out.println("target height ="+branchLList.get(index).getHeight()+", this height ="+c.getHeight());
+			// System.err.println("target height ="+branchLList.get(index).getHeight()+", this height ="+c.getHeight());
 			if (c.getHeight() < nodeList.get(index).getHeight()) {
 				nodeList.add(index + 1, c);
 				break;
 			} else {
 				index--;
 			}
-			// System.out.println(branchLList.get(index).getHeight());//@test
-		}// System.out.println();//@test
+			// System.err.println(branchLList.get(index).getHeight());//@test
+		}// System.err.println();//@test
 	}
 	
 	// clusterNodeList
@@ -302,13 +302,13 @@ public class treeMethod {
 		boolean printComment = false;
 		//print
 		if(printComment ){
-			System.out.print("clusterNodeList : ");
+			System.err.print("clusterNodeList : ");
 			for(treeNode tarNode : this.getClusterNodeList()){
-				System.out.print(tarNode); // TODO
-//				System.out.print("("+tarNode.getNumHiraHorz()+")-"); // TODO
-				System.out.print("("+tarNode.getNodePos()+"), "); // TODO
+				System.err.print(tarNode); // TODO
+//				System.err.print("("+tarNode.getNumHiraHorz()+")-"); // TODO
+				System.err.print("("+tarNode.getNodePos()+"), "); // TODO
 			}
-			System.out.println();
+			System.err.println();
 		}
 		// end print
 		
@@ -376,7 +376,7 @@ public class treeMethod {
 			}
 
 			// // insert data from dataTable
-			// System.out.println(this.dataTable.get(Integer.parseInt(nt.name.replaceAll("L",
+			// System.err.println(this.dataTable.get(Integer.parseInt(nt.name.replaceAll("L",
 			// ""))).get(0));
 			//int l = Integer.parseInt(nt.getName().replaceAll("L", ""));
 			
@@ -478,7 +478,7 @@ public class treeMethod {
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-			if(printComment)System.out.println(file.getPath());
+			if(printComment)System.err.println(file.getPath());
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
 			//
@@ -489,7 +489,7 @@ public class treeMethod {
 			ListIterator litr = this.getClusterNodeList().listIterator();
 //			while(litr.hasNext()){
 			for(int i = 0; i < this.getClusterNodeList().size(); i ++){
-//				System.out.println("writing cluster "+(i+1));
+//				System.err.println("writing cluster "+(i+1));
 				int j = 0;
 //				clstNod = (treeNode) litr.next();
 				clstNod = this.getClusterNodeList().get(i);
@@ -512,7 +512,7 @@ public class treeMethod {
 			//end write process
 			//
 			bw.close();
-			if(printComment)System.out.println("saved ClusterRow");//@system
+			if(printComment)System.err.println("saved ClusterRow");//@system
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -555,7 +555,7 @@ public class treeMethod {
 				//end write process
 				//
 				bw.close();
-				if(printComment) System.out.println("saved SeparatedClusters"+(i+1));//@system
+				if(printComment) System.err.println("saved SeparatedClusters"+(i+1));//@system
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -603,8 +603,8 @@ public class treeMethod {
 		
 
 
-		if(printComment ) System.out.println("finish read tree");
-		if(printComment) System.out.println();
+		if(printComment ) System.err.println("finish read tree");
+		if(printComment) System.err.println();
 	}
 	
 //	void makeTableHeader(){
@@ -617,7 +617,7 @@ public class treeMethod {
 //			this.tableHeader += this.dataTable.get(0).get(i)+",";
 //		}
 //		tableHeader = tableHeader.substring(0, tableHeader.length()-1);
-//		if (printComment){System.out.println("[HEADER] : "+tableHeader);}
+//		if (printComment){System.err.println("[HEADER] : "+tableHeader);}
 //	}
 
 	private void fillTableDataString(String sLine) {
@@ -657,8 +657,8 @@ public class treeMethod {
 			}
 		}
 
-		if(printComment) System.out.println("finish read tree");
-		if(printComment) System.out.println();
+		if(printComment) System.err.println("finish read tree");
+		if(printComment) System.err.println();
 	}
 
 
@@ -669,12 +669,12 @@ public class treeMethod {
 	void findNestForTree(String L){
 		String tarL = L;
 		// input is 1 line (and it's very very long!!) and the file contains only 1 line!!
-//		System.out.println("ROOT -> "+tarL);
+//		System.err.println("ROOT -> "+tarL);
 		tarL = this.findRootT(tarL);// make root node
 		initeLeafNodeNum();
 		
 		while(tarL.length() > 0){
-			//System.out.println("NODE -> "+tarL);
+			//System.err.println("NODE -> "+tarL);
 			tarL = this.findNestT(tarL);// make other node until the string's end
 			
 		}
@@ -749,10 +749,10 @@ public class treeMethod {
 					
 					caseNum = 4;
 					if (currentNode == this.root){
-						if(printComment) System.out.println("back to root safely!");
+						if(printComment) System.err.println("back to root safely!");
 						currentC = tarL;
 						currentS = tarL.substring(0, tarL.length()-1);
-//						System.out.println("currentS -> "+currentS);//@test
+//						System.err.println("currentS -> "+currentS);//@test
 						currentNode.setHeight(Double.parseDouble(currentS));
 						currentNode.setLeftMem(currentNode.getLeft().getMembers());//set leftMem
 						currentNode.setRightMem(currentNode.getRight().getMembers());// set rightMem
@@ -761,7 +761,7 @@ public class treeMethod {
 							this.maxMiNNodeHeightWithLeafChild = currentNode.getHeight();
 						}
 					}else{//Error didnt back to the root
-						if(printComment) System.out.println("did not back to the root -> the clustering file structure might wrong");//System Error
+						if(printComment) System.err.println("did not back to the root -> the clustering file structure might wrong");//System Error
 					}
 //
 
@@ -791,7 +791,7 @@ public class treeMethod {
 		if(tarL.length() == 0){
 			System.exit(1);
 		}else{
-//			System.out.println(currentC+" -> "+caseNum);
+//			System.err.println(currentC+" -> "+caseNum);
 			tarL = tarL.substring(currentC.length()).trim();
 		}
 		return tarL;
@@ -810,17 +810,17 @@ public class treeMethod {
 	}
 
 	private void printAllLeaves() {
-		System.out.println("vvv all leaves ");//@system
+		System.err.println("vvv all leaves ");//@system
 		treeNode tn = this.firstLeaf;
 		while (tn != null) {
 			tn.printNodeAllInfo();
 			tn = tn.getNextLeaf();
 		}
-		System.out.println("^^^ all leaves");//@system
+		System.err.println("^^^ all leaves");//@system
 	}
 	
 	private void printNodeArray() {
-		System.out.println("vvv nodeArray[]");//system
+		System.err.println("vvv nodeArray[]");//system
 		treeNode bt;
 		int i = 0;
 		while (i < upperNodeArray.length) {
@@ -828,10 +828,10 @@ public class treeMethod {
 			bt.printNodeAllInfo();
 			i++;
 		}
-		System.out.println("^^^ nodeArray[]");//system
+		System.err.println("^^^ nodeArray[]");//system
 	}
 	private void printNodeList() {
-		System.out.println("vvv NodeList<>");//system
+		System.err.println("vvv NodeList<>");//system
 		treeNode bt;
 		int i = 0;
 		while (i < nodeList.size()) {
@@ -839,10 +839,10 @@ public class treeMethod {
 			bt.printNodeAllInfo();
 			i++;
 		}
-		System.out.println("^^^ NodeList<>");//system
+		System.err.println("^^^ NodeList<>");//system
 	}
 	private void printClusterNodeList() {
-		System.out.println("vvv clusterNodeList<>");//system
+		System.err.println("vvv clusterNodeList<>");//system
 		treeNode bt;
 		int i = 0;
 		while (i < getClusterNodeList().size()) {
@@ -850,11 +850,11 @@ public class treeMethod {
 			bt.printNodeAllInfo();
 			i++;
 		}
-		System.out.println("^^^ clusterNodeList<>");//@system
+		System.err.println("^^^ clusterNodeList<>");//@system
 	}
 	
 	private void printAllNodes(){//breadth first
-		System.out.println("vvv all Nodes");//system
+		System.err.println("vvv all Nodes");//system
 		Queue<treeNode> tempoQueue = new LinkedList<treeNode>();
 //		int counter = n;//@del
 		treeNode tn = null;
@@ -871,23 +871,23 @@ public class treeMethod {
 				tempoQueue.add(tn.getRight());
 			}
 		}
-		System.out.println("^^^ all Nodes");//system
+		System.err.println("^^^ all Nodes");//system
 	}
 
 	private void printAllTree(){
-		System.out.println("vvv tree");//@system
-		System.out.println(TreeUtility.makeAllTreePathway(this, "UP"));//@system
-		System.out.println("^^^ tree");//@system
+		System.err.println("vvv tree");//@system
+		System.err.println(TreeUtility.makeAllTreePathway(this, "UP"));//@system
+		System.err.println("^^^ tree");//@system
 	}
 	
 	
 	void printDataTable() {
-		// System.out.println(dataTable);
+		// System.err.println(dataTable);
 		for (int i = 0; i < dataTable.size(); i++) {
 			for (int j = 0; j < dataTable.get(i).size(); j++) {
-				System.out.print(dataTable.get(i).get(j));
+				System.err.print(dataTable.get(i).get(j));
 			}
-			System.out.println();
+			System.err.println();
 		}
 	}
 	
@@ -1094,25 +1094,25 @@ public class treeMethod {
 			
 			//make resultList
 			if(printComment){
-				System.out.println("-- Start to make tempList and resultList --");
-				System.out.println("idealCN : "+clusterSplitter.getUserSplitMode()+""+clusterSplitter.getIdealClusterNum());
-				System.out.println("maxHeight : "+maxHeight);
+				System.err.println("-- Start to make tempList and resultList --");
+				System.err.println("idealCN : "+clusterSplitter.getUserSplitMode()+""+clusterSplitter.getIdealClusterNum());
+				System.err.println("maxHeight : "+maxHeight);
 			}
 			while(!resultListCompleat){
 				if(printComment) {
-					System.out.println("┌- predifIndex : "+preDifIndex);
-					System.out.print("├- ");
+					System.err.println("┌- predifIndex : "+preDifIndex);
+					System.err.print("├- ");
 					this.printtempList();
-					System.out.print("└- ");
+					System.err.print("└- ");
 					this.printresultList();
 				}
 				renewLists();// sort midnodes in tempList
 			}
 			if(printComment) {
-				System.out.println("finalized lists");
+				System.err.println("finalized lists");
 				this.printtempList();
 				this.printresultList();
-				System.out.println("-- Finished to make tempList and resultList --");
+				System.err.println("-- Finished to make tempList and resultList --");
 			}
 			
 			// to decide how long the resultList should be
@@ -1120,7 +1120,7 @@ public class treeMethod {
 
 				
 			if(printComment){
-				System.out.println(" resultListArray ");
+				System.err.println(" resultListArray ");
 				printTreeNodeArray(resultListArray);			
 			}
 			
@@ -1137,11 +1137,11 @@ public class treeMethod {
 		}
 
 		private void printTreeNodeArray(treeNode[] a){
-			System.out.print("resultListArray :");
+			System.err.print("resultListArray :");
 			for(treeNode tarNode: a){
-				System.out.print(tarNode.getHira()+"-"+tarNode.getHorz()+"("+tarNode.getHeight()+"), ");
+				System.err.print(tarNode.getHira()+"-"+tarNode.getHorz()+"("+tarNode.getHeight()+"), ");
 			}
-			System.out.println("");
+			System.err.println("");
 		}
 
 		private void renewLists(){
@@ -1177,7 +1177,7 @@ public class treeMethod {
 			treeNode tarNode = node;
 			boolean difHeightToNext = false;
 			if(resultList.size() >= clusterSplitter.getIdealClusterNum()-1){
-				if(printComment && !resultListHasMinSiz)System.out.println("└-> resultListHasMinSiz");
+				if(printComment && !resultListHasMinSiz)System.err.println("└-> resultListHasMinSiz");
 				resultListHasMinSiz = true;
 			}
 			
@@ -1218,7 +1218,7 @@ public class treeMethod {
 			 if(resultList.size() >= clusterSplitter.getIdealClusterNum() -1){// if resultList is long enough
 				 if(!resultListHasMinSiz){
 					 resultListHasMinSiz=true;
-//					 if(printComment)System.out.println("└-> resultListHasMinSiz");
+//					 if(printComment)System.err.println("└-> resultListHasMinSiz");
 				 }
 				 // conditions that will return resultList
 				 if (resultList.size() == 0 || tarNode.getHeight() != resultList.getLast().getHeight()){
@@ -1283,27 +1283,27 @@ public class treeMethod {
 	
 		// print functions
 		private void printtempList(){
-			System.out.print("tempList: ");
+			System.err.print("tempList: ");
 			if(this.tempList.size()>0){
 				ListIterator litr = this.tempList.listIterator();
 				while(litr.hasNext()){
 					treeNode tarNode = (treeNode) litr.next();
-					System.out.print(tarNode.getHira()+"-"+tarNode.getHorz()+"("+tarNode.getHeight()+"), ");
+					System.err.print(tarNode.getHira()+"-"+tarNode.getHorz()+"("+tarNode.getHeight()+"), ");
 				}
-			}else{System.out.print("null");}
-			System.out.print("\n");
+			}else{System.err.print("null");}
+			System.err.print("\n");
 		}
 		
 		private void printresultList(){
-			System.out.print("resultList: ");
+			System.err.print("resultList: ");
 			if(this.resultList.size()>0){
 				ListIterator litr = this.resultList.listIterator();
 				while(litr.hasNext()){
 					treeNode tarNode = (treeNode) litr.next();
-					System.out.print(tarNode.getHira()+"-"+tarNode.getHorz()+"("+tarNode.getHeight()+"), ");
+					System.err.print(tarNode.getHira()+"-"+tarNode.getHorz()+"("+tarNode.getHeight()+"), ");
 				}
-			}else{System.out.print("null");}
-			System.out.print("\n");
+			}else{System.err.print("null");}
+			System.err.print("\n");
 		}
 
 		/**
@@ -1311,7 +1311,7 @@ public class treeMethod {
 		 *	get a new height, then find a index to place the node, sorted by height
 		 *	return the insert place for the newNode; 
 		 */
-		private int binarySearchFortempList(double h){	//System.out.println("get into binarySearchFoertempList");
+		private int binarySearchFortempList(double h){	//System.err.println("get into binarySearchFoertempList");
 			double midHeight, newHeight = h;
 			int firstIndex, lastIndex, midIndex;
 			int indexGap = -1;// -1 -> undefined;
@@ -1339,7 +1339,7 @@ public class treeMethod {
 				midIndex = firstIndex + indexGap/2;
 				midHeight = tempList.get(midIndex).getHeight();
 				while(indexGap > 1){//* - keep search the place until bigIndex and smallIndex is beside, then the place is the middle of the two.
-//					System.out.println("in the while loop");
+//					System.err.println("in the while loop");
 					if(newHeight == midHeight){
 						return midIndex;
 					} else if(newHeight > midHeight){

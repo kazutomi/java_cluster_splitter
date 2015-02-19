@@ -70,8 +70,8 @@ public class TreeUtility {
 			}
 
 
-//			System.out.println(pathwayCountList);//@test
-//			System.out.println(pathwayC);//@test
+//			System.err.println(pathwayCountList);//@test
+//			System.err.println(pathwayC);//@test
 		}
 			wholePathway += "\n";
 //			wholePathwayU += "\n";
@@ -79,9 +79,9 @@ public class TreeUtility {
 			prePathway = newPathway;
 			tarNode = tarNode.getNextLeaf();
 		}
-//		System.out.println(treePathway);//@del
+//		System.err.println(treePathway);//@del
 
-//		System.out.println(wholePathwayC);//@del
+//		System.err.println(wholePathwayC);//@del
 		return wholePathway;
 	}
 	
@@ -152,16 +152,16 @@ public class TreeUtility {
 	public static void printTreeDiffPathway(String dpw){//@no more use
 		for(int i = 0; i < dpw.length(); i ++){
 			switch(dpw.charAt(i)){
-			case 'O':System.out.print("R");break;
-			case 'o':System.out.print(" ");break;
-			case 'L':System.out.print("┬[ ]");break;
-			case 'l':System.out.print("|   ");break;
-			case 'R':System.out.print("└[ ]");break;
-			case 'r':System.out.print("    ");break;
-			default :System.out.print("XXXX");break;
+			case 'O':System.err.print("R");break;
+			case 'o':System.err.print(" ");break;
+			case 'L':System.err.print("┬[ ]");break;
+			case 'l':System.err.print("|   ");break;
+			case 'R':System.err.print("└[ ]");break;
+			case 'r':System.err.print("    ");break;
+			default :System.err.print("XXXX");break;
 			}
 		}
-		System.out.println();
+		System.err.println();
 	}
 	
 	

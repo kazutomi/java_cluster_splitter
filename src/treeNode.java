@@ -80,7 +80,7 @@ public class treeNode {
 
 	public treeNode(treeNode p) {// make a child
 		this.parent = p;
-		// System.out.println("created a new nStructure");
+		// System.err.println("created a new nStructure");
 		if (p == null) {// for root
 			this.root = true;
 			this.setHiraHorz(0);
@@ -221,20 +221,20 @@ public class treeNode {
 
 	public void printNode(String h) {// with tabs
 		String hd = h + head;
-		System.out.print(h + "[" + type + "](");
+		System.err.print(h + "[" + type + "](");
 
 		if (this.left != null || this.right != null) {
-			System.out.println();
+			System.err.println();
 			if (this.left != null) {
 				this.left.printNode(hd);
 			}
 			if (this.right != null) {
 				this.right.printNode(hd);
 			}
-			System.out.print(h);
+			System.err.print(h);
 		}
 		/*
-		System.out.println("" + "hira = [" + this.hira + "], " + "horz = ["
+		System.err.println("" + "hira = [" + this.hira + "], " + "horz = ["
 				+ this.horz + "], " + "{" + info + "}, [leaf = " + leaf
 				+ "], [label = " + label + "], [label = " + label
 				+ "], [midpoint = " + midpoint + "], [height = " + height
@@ -403,7 +403,7 @@ public class treeNode {
 			lp ='(';
 			rp =')';
 		}
-		System.out.println("" 
+		System.err.println("" 
 				+ "number = "+lp+ this.tableLine +rp+ " "
 //				+ "leaf = ["+ this.leaf + "] "
 				+ "pos = "+lp+ this.hira + "-" + this.horz +rp+ " "
@@ -439,7 +439,7 @@ public class treeNode {
 	}
 	
 	public void printNodeHiraHorzInfo() {
-		System.out.println("" + "[" + this.hira+ "-"+ this.horz + "], ");
+		System.err.println("" + "[" + this.hira+ "-"+ this.horz + "], ");
 	}
 
 	public void setTMFigures(double x, double y, double w, double h, double r) {
@@ -449,7 +449,7 @@ public class treeNode {
 		this.tmH = h;
 		this.tmR = r;
 		
-//		System.out.print("root set TMFfigures -> ");//@test
+//		System.err.print("root set TMFfigures -> ");//@test
 //		this.printNodeInfo();//@test
 	}
 

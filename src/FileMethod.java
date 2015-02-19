@@ -20,12 +20,12 @@ public class FileMethod {
 		}
 		
 		// creating new folder
-		System.out.println("creating directory: " + folderPath);
+		System.err.println("creating directory: " + folderPath);
 		boolean result = theDir.mkdir();  
 		if(result) {    
-			System.out.println("new directory created");  
+			System.err.println("new directory created");  
 		}else{
-			System.out.println("couldent make a new directory:" + folderPath);
+			System.err.println("couldent make a new directory:" + folderPath);
 		}
 
 		return theDir;
