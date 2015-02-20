@@ -136,9 +136,11 @@ public class saveImgMethod {
 		//     make directory for the files      //
 		//////////////////////////////////////////
 //		System.err.println("cluster num -> "+controllMethod.getClusterNum()+"controll -> "+controllMethod.getClusterNum());//@test
-		String folderName = path+"/"+saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"_pix"+(int)saveImgMethod.TMW;
+//		String folderName = path+"/"+saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"_pix"+(int)saveImgMethod.TMW;
+		String folderName = path; // -> all output in a flat directory
+		
+//		for check is the directory exist
 		File theDir = new File(folderName);
-
 		// if the directory does not exist, create it
 		if (!theDir.exists()) {
 			System.err.println("creating directory: " + folderName);
@@ -293,9 +295,12 @@ public class saveImgMethod {
 				//			System.err.println("before save img");
 				//				String timePoint = ""+(t+1);
 				String timePoint = String.format("%02d", (t+1));
+//				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".PNG";
+				//+(int)saveImgMethod.TMW
+
 				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".PNG";
 				ImageIO.write(bi, "PNG", new File(folderName +"/"+ outputName));
-				System.err.println("saved img "+outputName);
+				if(printComments)System.err.println("saved img "+outputName);
 				//			ImageIO.write(bi, "JPEG", new File("c:\\yourImageName.JPG"));
 				//			ImageIO.write(bi, "gif", new File("c:\\yourImageName.GIF"));
 				//			ImageIO.write(bi, "BMP", new File("c:\\yourImageName.BMP"));
@@ -312,7 +317,7 @@ public class saveImgMethod {
 	}
 
 	public static void saveFrame(String name, String path) {
-		boolean printComment = false;
+		boolean printComments = false;
 		saveImgMethod.setFileName(name);
 		try {
 			BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -332,7 +337,7 @@ public class saveImgMethod {
 				tn = tmObj.getClusterList().get(i);// get cluster note
 				
 				// for checking cluster nodes
-				if(printComment){System.err.println("for draw frame: node number = "+i+", node pos = "+tn.getNodePos());}
+//				if(printComments){System.err.println("for draw frame: node number = "+i+", node pos = "+tn.getNodePos());}
 				
 				
 				double cluX = tn.getTMX() * TMW + TMX;
@@ -380,7 +385,7 @@ public class saveImgMethod {
 
 			String outputName = saveImgMethod.fileName+"FrameC"+tmObj.getClusterList().size()+".PNG";
 			ImageIO.write(bi, "PNG", new File(path+"/"+outputName));
-			System.err.println("saved img "+outputName);
+			if(printComments)System.err.println("saved img "+outputName);
 			//			ImageIO.write(bi, "JPEG", new File("c:\\yourImageName.JPG"));
 			//			ImageIO.write(bi, "gif", new File("c:\\yourImageName.GIF"));
 			//			ImageIO.write(bi, "BMP", new File("c:\\yourImageName.BMP"));

@@ -173,12 +173,15 @@ public class clusterSplitter {
 	}
 
 	private static void checkArgs(String[] a){
+		//TODO -> change this for add new input parameter
+		// new demand parameter is 4 -> make it to a variable
+		
 		
 		if (a.length < 4){
 			System.err.println(errorHeader+"This program needs at least 4 args");
 			System.exit(1);
 		}else if(a.length > 4 + acceptOptions.length){
-			System.err.println(errorHeader+"This program accept at most 5 args");
+			System.err.println(errorHeader+"This program accept at most "+4 + acceptOptions.length+" args");
 			System.exit(1);
 		}else{//has right input args 
 			//for fixed args

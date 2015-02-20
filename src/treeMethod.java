@@ -65,7 +65,7 @@ public class treeMethod {
 //		this.clusteringFileName = fn+"_clusterP.txt";
 //	}
 	public void makeData(String treeFile, String valueFile){//@@@
-		boolean printData = true;
+		boolean printData = false;
 		this.timepointFileName = valueFile;//@@@
 		this.clusteringFileName = treeFile;//@@@
 		
@@ -362,7 +362,7 @@ public class treeMethod {
 	// }
 
 	void makeLeafList(treeNode q) {
-		boolean printComments = true;
+		boolean printComments = false;
 		treeNode tn = q;
 		if(printComments)System.err.println("into a makeLeafList(**)");//@@@test
 		if (tn.isLeaf()) {
@@ -396,7 +396,7 @@ public class treeMethod {
 			////
 			Double d;
 			if(printComments)System.err.println("original rowSize is " + rowSize);
-			for (int i = 1; i <= rowSize-1; i++) {// rowSize-1 because the 1st row is ProbID(name) / if the last row is GO symbols then it should be rowSize-2
+			for (int i = 1; i <= rowSize-2; i++) {// rowSize-1 because the 1st row is ProbID(name) / if the last row is GO symbols then it should be rowSize-2
 				if(printComments)System.err.println("i="+i+"->"+this.dataTable.get(l).get(i));
 				d = Double.parseDouble(this.dataTable.get(l).get(i)) + clusterSplitter.getSuppValue();
 				tn.addValue(d);
@@ -433,7 +433,7 @@ public class treeMethod {
 
 
 	public void makeClusterValue() {// search tree in breadth first order;
-		boolean printComments = true;
+		boolean printComments = false;
 		ArrayList<treeNode> nodeArrayBF = new ArrayList<treeNode>(); // node in
 		// BreadthFirst
 		// order
