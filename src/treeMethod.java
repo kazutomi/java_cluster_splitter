@@ -1128,7 +1128,10 @@ public class treeMethod {
 		}	
 	
 		private void addToTempList(int i, treeNode node) {
-			// TODO 
+			// XXX
+			// the first option switch: [do not allow single node] 
+			// allow single node or do not allow single node and the target node is not a single one
+			
 			treeNode tarNode = node;
 			if(!clusterSplitter.getOptionSwitchs().get(0) || ((clusterSplitter.getOptionSwitchs().get(0))&&(tarNode.getHeight() > this.maxHeight))){
 				tempList.add(i, tarNode);
