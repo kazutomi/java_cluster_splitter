@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 public class clusterSplitter {
 	/*
 	 * elcipse args
+	 * -0 1:1,3:6,8:10,12 ../testRawDataR20.csv ../testDendrogramR20.txt  ../outdir
+	 * 
 	 * -0 text/testRawDataR20.csv text/testDendrogramR20.txt  outdir_R20 
 	 * -0 text/AR0278TM.csv text/AR0278TM_clusterP.txt  outdir_AR0278TM 
 	 * -0 text/AR0538TM.csv text/AR0538TM_clusterP.txt  outdir_AR0538TM 
@@ -30,10 +32,18 @@ public class clusterSplitter {
 	private static int realClusterNum = -1;// "Figure2_mfy2-2" -> 25, others ->// 100; convtime -> 7, 2, 172...
 	private static char userSplitMode = '|';// -> '+', '-', '/',
 	private static char opeSplitMode = '|';// -> '+', '-', '/',
+	
+	// for label row
+	private static int metaRowNum;
+	// start col and end col is correspond. exp:[1,3:6,8:10,12]
+	// then can get the correspond tupul by <timepointStarCol.get(i), timepointEndCol.get(i)>
+	private static ArrayList<Integer> treemapTimepoints;
+	
 	private static File expressionFile;
 	private static File dendrogramFile;
 	private static File outputDir;
 	
+	private static int fixedArgNum = 5;
 	private static String[] acceptOptions = {"-s"};// [-s] -> do not allow singleNode cluster
 	private static ArrayList<Boolean> optionSwitchs = new ArrayList<Boolean>();// need init <- by acceptOption.length
 	
@@ -173,21 +183,17 @@ public class clusterSplitter {
 	}
 
 	private static void checkArgs(String[] a){
-		//TODO -> change this for add new input parameter
-		// new demand parameter is 4 -> make it to a variable
-		
-		
-		if (a.length < 4){
-			System.err.println(errorHeader+"This program needs at least 4 args");
+		if (a.length < fixedArgNum){
+			System.err.println(errorHeader+"This program needs at least "+fixedArgNum+" args");
 			System.exit(1);
-		}else if(a.length > 4 + acceptOptions.length){
-			System.err.println(errorHeader+"This program accept at most "+4 + acceptOptions.length+" args");
+		}else if(a.length > fixedArgNum + acceptOptions.length){
+			System.err.println(errorHeader+"This program accept at most "+fixedArgNum+ acceptOptions.length+" args");
 			System.exit(1);
 		}else{//has right input args 
 			//for fixed args
-			checkFixedArgs(Arrays.copyOfRange(a, 0, 4));
+			checkFixedArgs(Arrays.copyOfRange(a, 0, fixedArgNum));
 			//for option args (if there are any)
-			if(a.length > 4) checkOptionArgs(Arrays.copyOfRange(a, 4, a.length));
+			if(a.length > fixedArgNum) checkOptionArgs(Arrays.copyOfRange(a, fixedArgNum, a.length));
 		}
 	}
 	
@@ -219,6 +225,10 @@ public class clusterSplitter {
 		//checking are the args[] qualified
 		errorInChecking = false; errorInFlow = true; printComments = false;
 		try {
+			//
+			// 1st arg -> split mode
+			//TODO check the legality
+			
 			//splitMode and cluster number;
 			setUserSplitMode(a[0].charAt(0));
 			setOpeSplitMode(getUserSplitMode());
@@ -237,9 +247,52 @@ public class clusterSplitter {
 			}
 			idealClusterNum = userClusterNum;
 			if (printComments) System.err.println("cluster split mood -> " + getUserSplitMode()+ ", num ->" + idealClusterNum);
+			
+			//
+			// 2nd arg -> numbers for meta row and timepoint col
+			String figs[] = a[1].split(":");
+			// for meta row
+			if(Integer.parseInt(figs[0]) > 0){
+				metaRowNum = Integer.parseInt(figs[0]);
+			}else {
+				System.err.println("the given number for meta row number: "+figs[0]+", in 2nd arg: "+a[1]+" is not acceptable.\n the should be a non-negative integer.");
+				errorInChecking = true;
+			}
+			// for timepoint rows
+			treemapTimepoints.clear();
+			ArrayList<Integer> timepointStartColNum = null;
+			ArrayList<Integer> timepointEndColNum = null; 
+			
+			for(int i = 1; i < figs.length; i ++){
+				String[] tuple = figs[i].split(",");
+				int startColNum = Integer.parseInt(tuple[0]);
+				int endColNum = Integer.parseInt(tuple[1]);
+				
+				// check the colNum's legality
+				// is the colNum a non-nega int?
+				// is the colNum bigger than the last one? (except the 1st one)
+				if ( (i == 1 && startColNum >= 0) || 
+						startColNum > timepointEndColNum.get(timepointEndColNum.size() -1) ||
+						endColNum > timepointStartColNum.get(timepointStartColNum.size() -1)){
+					// make colNumLists
+					timepointStartColNum.add(startColNum);
+					timepointEndColNum.add(endColNum);
+					// make treemapTimepoints
+					for(int j = startColNum; j <= endColNum; j ++){
+						treemapTimepoints.add(j);
+					}
+				}else {
+					System.err.println("the given number for timepoint colum number: "+figs[i]+", in 2nd arg: "+a[1]+" is not acceptable.\n the numbers have to be non-negative and bigger than the previous number");
+					errorInChecking = true;
+					break;
+				}
+			}
 
+			
+			//
+			// 3rd and 4th args -> file path
 			// dendrogramFile & expressionFile
-			for(int i = 1; i <= 2; i++){
+			for(int i = 2; i <= 3; i++){
 				File f = new File(a[i]);
 				if(f.exists() && !f.isDirectory()) {
 					switch (i) {
@@ -256,18 +309,22 @@ public class clusterSplitter {
 					errorInChecking = true;
 				}
 			}
-
+			
+			//
+			// 5th arg -> dir path
 			// outputDirectry
-			File f = new File(a[3]);
+			File f = new File(a[4]);
 			if(f.exists() && f.isDirectory()){
 
 				setOutputDir(f);// untested // outputDir = f;
-				if(printComments)System.err.println(a[3]+"is a directry");
+				if(printComments)System.err.println(a[4]+"is a directry");
 			} else{
-				System.err.println(errorHeader+ a[3]+" is not a directry or does not exist");
+				System.err.println(errorHeader+ a[4]+" is not a directry or does not exist");
 				errorInChecking = true;
 			}
 			
+			//
+			// finish all fiexd arg check
 			errorInFlow = false;
 		} catch(Exception err){
 			err.printStackTrace(System.err);
@@ -438,6 +495,14 @@ public class clusterSplitter {
 
 	public static void setOptionSwitchs(ArrayList<Boolean> optionSwitchs) {
 		clusterSplitter.optionSwitchs = optionSwitchs;
+	}
+
+	public static ArrayList<Integer> getTreemapTimepoints() {
+		return treemapTimepoints;
+	}
+
+	public static void setTreemapTimepoints(ArrayList<Integer> treemapTimepoints) {
+		clusterSplitter.treemapTimepoints = treemapTimepoints;
 	}
 
 	public static File getOutputDir() {
