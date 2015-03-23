@@ -396,7 +396,7 @@ public class treeMethod {
 			////
 			Double d;
 			if(printComments)System.err.println("original rowSize is " + rowSize);
-			for (int i = 1; i <= rowSize-2; i++) {// rowSize-1 because the 1st row is ProbID(name) / if the last row is GO symbols then it should be rowSize-2
+			for (int i = 1; i <= rowSize-1; i++) {//XXX rowSize-1 because the 1st row is ProbID(name) / if the last row is GO symbols then it should be rowSize-2
 				if(printComments)System.err.println("i="+i+"->"+this.dataTable.get(l).get(i));
 				d = Double.parseDouble(this.dataTable.get(l).get(i)) + clusterSplitter.getSuppValue();
 				tn.addValue(d);
@@ -525,7 +525,7 @@ public class treeMethod {
 		for(int i = 0; i < this.getClusterNodeList().size(); i++){
 			clstNode = this.getClusterNodeList().get(i);
 			try {
-				File file = new File(outD, (i+1)+".csv");
+				File file = new File(outD, (i+1)+"_"+clstNode.getNodePos()+".csv");
 				// if file doesnt exists, then create it
 				if (!file.exists()) {
 					file.createNewFile();
