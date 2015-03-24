@@ -499,7 +499,7 @@ public class treeMethod {
 					tarNod = tmpQ.poll();
 					if(tarNod.isLeaf()){
 						j++;
-						bw.write((tarNod.getTableLine()+0)+", "+tarNod.getName()+"\n");
+						bw.write((tarNod.getTableLine()+0)+"\n");
 //						bw.write(tarNod.getProbeID()+", "+(tarNod.getTableLine()+0)+"\n");
 //						bw.write(tarNod.getProbeID()+", "+tarNod.getValueOneLine()+", "+tarNod.getGeneSymbol()+", "+(i+1)+"-["+ clstNod.getHira()+"-"+clstNod.getHorz()+"]"+"\n");
 					}else{
