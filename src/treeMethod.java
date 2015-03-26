@@ -397,7 +397,7 @@ public class treeMethod {
 			Double d;
 			if(printComments)System.err.println("original rowSize is " + rowSize);
 			//TODO change the fig cols from now to cols via 2nd arg
-			for (int i = 1; i < rowSize; i++) {//XXX rowSize-1 because the 1st row is ProbID(name) / if the last row is GO symbols then it should be rowSize-2
+			for (int i = 1; i < rowSize-1; i++) {//XXX rowSize-1 because the 1st row is ProbID(name) / if the last row is GO symbols then it should be rowSize-2
 				if(printComments)System.err.println("i="+i+"->"+this.dataTable.get(l).get(i));
 				d = Double.parseDouble(this.dataTable.get(l).get(i)) + clusterSplitter.getSuppValue();
 				tn.addValue(d);
