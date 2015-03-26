@@ -296,10 +296,10 @@ public class clusterSplitter {
 				File f = new File(a[i]);
 				if(f.exists() && !f.isDirectory()) {
 					switch (i) {
-		            	case 1: expressionFile = f;
+		            	case 2: expressionFile = f;
 		            		setInputTableFilePath(f.getPath());
 		            		break;	
-		            	case 2: dendrogramFile = f;
+		            	case 3: dendrogramFile = f;
 		            		setInputTreeFilePath(f.getPath());
 		            		break;
 					}
