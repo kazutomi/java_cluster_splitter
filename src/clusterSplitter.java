@@ -37,7 +37,7 @@ public class clusterSplitter {
 	private static int metaRowNum;
 	// start col and end col is correspond. exp:[1,3:6,8:10,12]
 	// then can get the correspond tupul by <timepointStarCol.get(i), timepointEndCol.get(i)>
-	private static ArrayList<Integer> treemapTimepoints;
+	private static ArrayList<Integer> treemapTimepoints = new ArrayList<Integer>();
 	
 	private static File expressionFile;
 	private static File dendrogramFile;
@@ -260,8 +260,8 @@ public class clusterSplitter {
 			}
 			// for timepoint rows
 			treemapTimepoints.clear();
-			ArrayList<Integer> timepointStartColNum = null;
-			ArrayList<Integer> timepointEndColNum = null; 
+			ArrayList<Integer> timepointStartColNum = new ArrayList<Integer>();
+			ArrayList<Integer> timepointEndColNum = new ArrayList<Integer>(); 
 			
 			for(int i = 1; i < figs.length; i ++){
 				String[] tuple = figs[i].split(",");
