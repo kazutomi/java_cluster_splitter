@@ -82,9 +82,9 @@ public class treeMethod {
 	}
 
 	void makeDendrogramTree(String filePath) {
-		boolean printComment = false;
+		boolean printComments = false;
 		readDendrogramFile(filePath);// dendrogram file from R
-		if(printComment){
+		if(printComments){
 			System.err.println("----------^^ read tree ^^------------\n");		
 			if (clusterSplitter.tnObj != root) {
 				System.err.println("couldn't back to root savely. the structure is wrong...");
@@ -122,7 +122,7 @@ public class treeMethod {
 
 	
 	void makeNodesLists(double x, double y, double w, double h) {
-		boolean printComment = false;
+		boolean printComments = false;
 		initeTreemap(x, y, w, h);// for whole tree map.
 		this.root.setTMFigures(0.0, 0.0, 1.0, 1.0, h / w);
 		this.firstLeaf = null;
@@ -131,7 +131,7 @@ public class treeMethod {
 //		this.printAllLeaves();//@test
 		
 		initAllTMInfo(root);// set treemap info -> set each nodes' (x, y, w, h, r) for treemap
-		if(printComment) System.err.println("set Treemap normalized information for all nodes.\n");
+		if(printComments) System.err.println("set Treemap normalized information for all nodes.\n");
 		
 //		this.printAllNodes();//@test
 		
@@ -150,10 +150,10 @@ public class treeMethod {
 	}
 	
 	private void makeInnerNodeMethodNew(){
-		boolean printComment = false;//XXX comment XXX 
+		boolean printComments = false;//XXX comment XXX 
 		MidnodeListMethod mm = new MidnodeListMethod();
 		this.upperNodeArray = mm.makeMidNodesLists(this.root, this.maxMiNNodeHeightWithLeafChild);//System.err.println("midNodeArrau done");
-		if(printComment) System.err.println(upperNodeArray.length);
+		if(printComments) System.err.println(upperNodeArray.length);
 		clusterSplitter.setRealClusterNum(upperNodeArray.length+1);
 //		this.setHeightNumInMidNodeArray();
 		makeClusterNodeList(clusterSplitter.getRealClusterNum());//need //
@@ -299,9 +299,9 @@ public class treeMethod {
 		}
 		this.getClusterNodeList().addAll(clusterNodeSet);
 		
-		boolean printComment = false;
+		boolean printComments = false;
 		//print
-		if(printComment ){
+		if(printComments ){
 			System.err.print("clusterNodeList : ");
 			for(treeNode tarNode : this.getClusterNodeList()){
 				System.err.print(tarNode); // TODO
@@ -473,13 +473,13 @@ public class treeMethod {
 	}
 	
 	public void writeClusterRow(File outD){
-		boolean printComment = false;
+		boolean printComments = false;
 		try{File file = new File(outD, "clusters.csv");
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-			if(printComment)System.err.println(file.getPath());
+			if(printComments)System.err.println(file.getPath());
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
 			//
@@ -513,7 +513,7 @@ public class treeMethod {
 			//end write process
 			//
 			bw.close();
-			if(printComment)System.err.println("saved ClusterRow");//@system
+			if(printComments)System.err.println("saved ClusterRow");//@system
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -521,7 +521,7 @@ public class treeMethod {
 	}
 	
 	public void writeSeparatedClusters(File outD){
-		boolean printComment = false;
+		boolean printComments = false;
 		treeNode clstNode;
 		for(int i = 0; i < this.getClusterNodeList().size(); i++){
 			clstNode = this.getClusterNodeList().get(i);
@@ -556,7 +556,7 @@ public class treeMethod {
 				//end write process
 				//
 				bw.close();
-				if(printComment) System.err.println("saved SeparatedClusters"+(i+1));//@system
+				if(printComments) System.err.println("saved SeparatedClusters"+(i+1));//@system
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -579,7 +579,7 @@ public class treeMethod {
 	// open file operation
 	/////////////////////////
 	void readTableFile(String filePath) {
-		boolean printComment = false;
+		boolean printComments = false;
 		BufferedReader br = null;
 		// Open the file from the createWriter() example
 		try {
@@ -604,12 +604,12 @@ public class treeMethod {
 		
 
 
-		if(printComment ) System.err.println("finish read tree");
-		if(printComment) System.err.println();
+		if(printComments ) System.err.println("finish read tree");
+		if(printComments) System.err.println();
 	}
 	
 //	void makeTableHeader(){
-//		boolean printComment = false;
+//		boolean printComments = false;
 ////		for(String s: this.dataTable.get(0)){
 ////			this.tableHeader += s+",-";
 ////		}
@@ -618,7 +618,7 @@ public class treeMethod {
 //			this.tableHeader += this.dataTable.get(0).get(i)+",";
 //		}
 //		tableHeader = tableHeader.substring(0, tableHeader.length()-1);
-//		if (printComment){System.err.println("[HEADER] : "+tableHeader);}
+//		if (printComments){System.err.println("[HEADER] : "+tableHeader);}
 //	}
 
 	private void fillTableDataString(String sLine) {
@@ -637,7 +637,7 @@ public class treeMethod {
 	
 
 	void readDendrogramFile(String filePath) {// make a new class and functuion -> readfunc(this)
-		boolean printComment = false;
+		boolean printComments = false;
 		BufferedReader br = null;
 		// Open the file from the createWriter() example
 		try {
@@ -658,8 +658,8 @@ public class treeMethod {
 			}
 		}
 
-		if(printComment) System.err.println("finish read tree");
-		if(printComment) System.err.println();
+		if(printComments) System.err.println("finish read tree");
+		if(printComments) System.err.println();
 	}
 
 
@@ -704,7 +704,7 @@ public class treeMethod {
 	}
 	//@@@
 	String findNestT(String tarL){
-		boolean printComment = false;
+		boolean printComments = false;
 		String currentC = "";// current Chunk
 		String currentS = "";// current String
 		int caseNum = 0;// -1->Error, 0->null 1->[(], 2->[number,], 3->[number),] midNode 4-> [number)] end
@@ -750,7 +750,7 @@ public class treeMethod {
 					
 					caseNum = 4;
 					if (currentNode == this.root){
-						if(printComment) System.err.println("back to root safely!");
+						if(printComments) System.err.println("back to root safely!");
 						currentC = tarL;
 						currentS = tarL.substring(0, tarL.length()-1);
 //						System.err.println("currentS -> "+currentS);//@test
@@ -762,7 +762,7 @@ public class treeMethod {
 							this.maxMiNNodeHeightWithLeafChild = currentNode.getHeight();
 						}
 					}else{//Error didnt back to the root
-						if(printComment) System.err.println("did not back to the root -> the clustering file structure might wrong");//System Error
+						if(printComments) System.err.println("did not back to the root -> the clustering file structure might wrong");//System Error
 					}
 //
 
@@ -1085,7 +1085,7 @@ public class treeMethod {
 		private boolean resultListCompleat = false;//use for all renewLists loops
 		private boolean resultListHasMinSiz = false;// use for all renewLists loops
 		private double maxHeight = -1;//use for all addToTempList 
-		private boolean printComment = false;//XXX comment XXX
+		private boolean printComments = false;//XXX comment XXX
 		
 		private treeNode[] makeMidNodesLists(treeNode rt, double mh){
 			treeNode[] resultListArray = null;
@@ -1094,13 +1094,13 @@ public class treeMethod {
 //			tempList.add(rt);// init tempList
 			
 			//make resultList
-			if(printComment){
+			if(printComments){
 				System.err.println("-- Start to make tempList and resultList --");
 				System.err.println("idealCN : "+clusterSplitter.getUserSplitMode()+""+clusterSplitter.getIdealClusterNum());
 				System.err.println("maxHeight : "+maxHeight);
 			}
 			while(!resultListCompleat){
-				if(printComment) {
+				if(printComments) {
 					System.err.println("┌- predifIndex : "+preDifIndex);
 					System.err.print("├- ");
 					this.printtempList();
@@ -1109,7 +1109,7 @@ public class treeMethod {
 				}
 				renewLists();// sort midnodes in tempList
 			}
-			if(printComment) {
+			if(printComments) {
 				System.err.println("finalized lists");
 				this.printtempList();
 				this.printresultList();
@@ -1120,7 +1120,7 @@ public class treeMethod {
 				resultListArray = resultList.toArray(new treeNode[resultList.size()]);
 
 				
-			if(printComment){
+			if(printComments){
 				System.err.println(" resultListArray ");
 				printTreeNodeArray(resultListArray);			
 			}
@@ -1181,7 +1181,7 @@ public class treeMethod {
 			treeNode tarNode = node;
 			boolean difHeightToNext = false;
 			if(resultList.size() >= clusterSplitter.getIdealClusterNum()-1){
-				if(printComment && !resultListHasMinSiz)System.err.println("└-> resultListHasMinSiz");
+				if(printComments && !resultListHasMinSiz)System.err.println("└-> resultListHasMinSiz");
 				resultListHasMinSiz = true;
 			}
 			

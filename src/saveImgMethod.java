@@ -120,7 +120,7 @@ public class saveImgMethod {
 	
 	
 	public static void saveImgs(String name, int G, String path) {// or 0x11<=>0x[color][line] G0->[-,-], G1[-,line], G2[color,-], G3[color, line]
-		boolean printComments = true;
+		boolean printComments = false;
 		
 		saveImgMethod.setFileName(name);
 		//		int width = controllMethod.winW;
