@@ -166,7 +166,7 @@ public class saveImgMethod {
 //		for(int t = 0; t < tmObj.root.getValue().size()/**/; t ++){// old
 		
 		// loop for all timepoints from args 
-		for(int t = 0; t < clusterSplitter.getTreemapTimepoints().size()/**/; t ++){
+		for(int t = 0; t < clusterSplitter.getTreemapTimepoints().size(); t ++){//XXX for all legal time points
 			int timepointColNum = clusterSplitter.getTreemapTimepoints().get(t);
 //			System.err.println("tn.getValue().size() -> " +tn.getValue().size());
 			try {
@@ -241,7 +241,7 @@ public class saveImgMethod {
 					/////////////////////////
 					if(G > 1){
 						Color colYtoB;
-						float R = (float)((locLeaf.getValue(timepointColNum)-locLeaf.getValueMin())/(locLeaf.getValueMax()-locLeaf.getValueMin()));
+						float R = (float)((locLeaf.getValue(t)-locLeaf.getValueMin())/(locLeaf.getValueMax()-locLeaf.getValueMin()));//XXXlocLeaf.getValue(t) because value only contains legal time points  
 						//					System.err.println(R);
 						//					colYtoB = blend2Colors(Color.YELLOW, Color.BLUE, ((tn.getValue(0)-tn.getValueMin())/(tn.getValueMax()-tn.getValueMin())));
 
