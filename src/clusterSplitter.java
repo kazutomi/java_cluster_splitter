@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 public class clusterSplitter {
 	/*
 	 * elcipse args
+	 * 
+	 * @tominaga +20 1:1,3:6,8:10,12 data.csv dendrogram.txt  ../outdir
 	 * -0 1:1,3:6,8:10,12 ../testRawDataR20.csv ../testDendrogramR20.txt  ../outdir
 	 * -0 1:1,3:5,6 /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/convTimeSum0904.csv /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/Pearson/tree.txt  /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/Pearson/treemapTest
 	 * -0 1:1,3:6,8:10,12 text/testRawDataR20.csv text/testDendrogramR20.txt  outdir/outdir_R20 
