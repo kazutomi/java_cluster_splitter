@@ -590,6 +590,8 @@ public class treeMethod {
 			while ((SLine = br.readLine()) != null) {
 				// TODO only left DataTable -> delate TableDataString is ideal
 				fillTableDataString(SLine);
+				
+				// length check in value rows only, not in metadata row
 				if(lineNum < clusterSplitter.getMetaRowNum()){
 					fillDataTable(0, SLine.trim());
 				}else{
