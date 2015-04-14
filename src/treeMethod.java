@@ -586,10 +586,16 @@ public class treeMethod {
 		try {
 			String SLine;
 			br = new BufferedReader(new FileReader(filePath));// /readTreeTest10/text/AR0538_AR1004_Signals2_L20.csv
-
+			int lineNum = 0;
 			while ((SLine = br.readLine()) != null) {
+				// TODO only left DataTable -> delate TableDataString is ideal
 				fillTableDataString(SLine);
-				fillDataTable(SLine.trim());
+				if(lineNum < clusterSplitter.getMetaRowNum()){
+					fillDataTable(0, SLine.trim());
+				}else{
+					fillDataTable(1, SLine.trim());
+				}
+				lineNum ++;
 			}
 
 		} catch (IOException e) {
@@ -627,9 +633,18 @@ public class treeMethod {
 	}
 
 	
-	void fillDataTable(String l) {
+	private void fillDataTable(int checkLength, String l) {
 		this.dataTable.add(new ArrayList<String>());
 		String[] elements = l.split(",");
+		if( checkLength > 0 && elements.length-1 < clusterSplitter.getTreemapTimepoints().get(clusterSplitter.getTreemapTimepoints().size()-1)){
+			System.err.println(
+					"the given number of time point (in the 2nd arg) is bigger than the data's column size (in the 3rd arg)" +
+					"\nthe given time points are:\n"+clusterSplitter.getTreemapTimepoints()+
+					"\nhowever the biggest colum's number is \""+(elements.length-1)+"\", (start with 0) in the line of:\n"+l);
+			System.exit(1);
+			return;
+		}
+		//TODO check if the elements.size() < timepointEndColNum.get(timepointEndColNum.size()-1) -> [ERROR] time points are more than table data
 		for (int i = 0; i < elements.length; i++) {
 			dataTable.get(dataTable.size() - 1).add(elements[i]);
 		}

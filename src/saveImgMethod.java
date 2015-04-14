@@ -154,7 +154,7 @@ public class saveImgMethod {
 		}
 
 		/////////////////////////////////////////////
-		//            for all TIME POINT          //
+		//            for all legal TIME POINT          //
 		///////////////////////////////////////////
 		//		System.err.println("enter saveImg");
 		saveImgMethod.tn = tmObj.root;//@del @@ you should do not use all target node as tn after this.
@@ -298,7 +298,7 @@ public class saveImgMethod {
 				/////////////////////////////
 				//			System.err.println("before save img");
 				//				String timePoint = ""+(t+1);
-				String timePoint = String.format("%02d", (timepointColNum+1));
+				String timePoint = String.format("%02d", (timepointColNum));
 //				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".PNG";
 				//+(int)saveImgMethod.TMW
 

@@ -229,8 +229,7 @@ public class clusterSplitter {
 		try {
 			//
 			// 1st arg -> split mode
-			//TODO check the legality
-			
+			//check the legality
 			//splitMode and cluster number;
 			setUserSplitMode(a[0].charAt(0));
 			setOpeSplitMode(getUserSplitMode());
@@ -250,41 +249,51 @@ public class clusterSplitter {
 			idealClusterNum = userClusterNum;
 			if (printComments) System.err.println("cluster split mood -> " + getUserSplitMode()+ ", num ->" + idealClusterNum);
 			
+			
 			//
 			// 2nd arg -> numbers for meta row and timepoint col
 			String figs[] = a[1].split(":");
 			// for meta row
-			if(Integer.parseInt(figs[0]) > 0){
-				metaRowNum = Integer.parseInt(figs[0]);
+			if(Integer.parseInt(figs[0]) >= 0){
+				setMetaRowNum(Integer.parseInt(figs[0]));
 			}else {
-				System.err.println("the given number for meta row number: "+figs[0]+", in 2nd arg: "+a[1]+" is not acceptable.\n the should be a non-negative integer.");
+				System.err.println("the given number for meta row number: \""+figs[0]+"\", in 2nd arg: \""+a[1]+"\", is not acceptable.\n the number should be non-negative integer.");
 				errorInChecking = true;
 			}
 			// for timepoint rows
 			treemapTimepoints.clear();
 			ArrayList<Integer> timepointStartColNum = new ArrayList<Integer>();
 			ArrayList<Integer> timepointEndColNum = new ArrayList<Integer>(); 
+			timepointStartColNum.add(-1);// for the comparison
+			timepointEndColNum.add(-1);// for the comparison
 			
 			for(int i = 1; i < figs.length; i ++){
 				String[] tuple = figs[i].split(",");
 				int startColNum = Integer.parseInt(tuple[0]);
 				int endColNum = Integer.parseInt(tuple[1]);
 				
-				// check the colNum's legality
+				// TODO XXX check the colNum's legality
 				// is the colNum a non-nega int?
 				// is the colNum bigger than the last one? (except the 1st one)
-				if ( (i == 1 && startColNum >= 0) || 
-						startColNum > timepointEndColNum.get(timepointEndColNum.size() -1) ||
-						endColNum > timepointStartColNum.get(timepointStartColNum.size() -1)){
+				// is the colNum not bigger than data table? -> TODO add check to the reading data batle!
+				if ( startColNum > timepointEndColNum.get(timepointEndColNum.size() -1) && endColNum >= startColNum ){
+					
+					// delate the first [-1] only for the 1st time
+					if(i == 1){
+						timepointStartColNum.clear();
+						timepointEndColNum.clear();
+					}
+					
 					// make colNumLists
 					timepointStartColNum.add(startColNum);
 					timepointEndColNum.add(endColNum);
+					
 					// make treemapTimepoints
 					for(int j = startColNum; j <= endColNum; j ++){
 						treemapTimepoints.add(j);
 					}
 				}else {
-					System.err.println("the given number for timepoint colum number: "+figs[i]+", in 2nd arg: "+a[1]+" is not acceptable.\n the numbers have to be non-negative and bigger than the previous number");
+					System.err.println("the given number for timepoint colum number: \""+figs[i]+"\", in 2nd arg: \""+a[1]+"\", is not acceptable.\n all numbers have to be non-negative, start column number should be bigger than the previous end column number, and end column number should be not smaller than the previous start column number");
 					errorInChecking = true;
 					break;
 				}
@@ -497,6 +506,14 @@ public class clusterSplitter {
 
 	public static void setOptionSwitchs(ArrayList<Boolean> optionSwitchs) {
 		clusterSplitter.optionSwitchs = optionSwitchs;
+	}
+
+	public static int getMetaRowNum() {
+		return metaRowNum;
+	}
+
+	public static void setMetaRowNum(int metaRowNum) {
+		clusterSplitter.metaRowNum = metaRowNum;
 	}
 
 	public static ArrayList<Integer> getTreemapTimepoints() {
