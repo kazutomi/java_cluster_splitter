@@ -166,8 +166,8 @@ public class saveImgMethod {
 //		for(int t = 0; t < tmObj.root.getValue().size()/**/; t ++){// old
 		
 		// loop for all timepoints from args 
-		for(int t = 0; t < clusterSplitter.getTreemapTimepoints().size(); t ++){//XXX for all legal time points
-			int timepointColNum = clusterSplitter.getTreemapTimepoints().get(t);
+		for(int timepointCounter = 0; timepointCounter < clusterSplitter.getTreemapTimepoints().size(); timepointCounter ++){//XXX for all legal time points
+			int timepointColNum = clusterSplitter.getTreemapTimepoints().get(timepointCounter);
 //			System.err.println("tn.getValue().size() -> " +tn.getValue().size());
 			try {
 
@@ -199,7 +199,7 @@ public class saveImgMethod {
 						//						
 						Color colYtoB, colB, colY;
 //						float [] colfYtoB = new float[3];
-						float R = (float)((locCluster.getValue(timepointColNum)-locCluster.getValueMin())/(locCluster.getValueMax()-locCluster.getValueMin()));
+						float R = (float)((locCluster.getValue(timepointCounter)-locCluster.getValueMin())/(locCluster.getValueMax()-locCluster.getValueMin()));
 //						float H = (1.0f/6.0f) + (1.0f/6.0f) *R;
 						colY = new Color((int)Color.YELLOW.getRed(),(int)Color.YELLOW.getGreen(), (int)Color.YELLOW.getBlue(), (int)((1.0-R) *Color.YELLOW.getAlpha()));          //
 						colB = new Color((int)Color.BLUE.getRed(),(int)Color.BLUE.getGreen(), (int)Color.BLUE.getBlue(), (int)(Color.BLUE.getAlpha()*R) );
@@ -241,10 +241,11 @@ public class saveImgMethod {
 					/////////////////////////
 					if(G > 1){
 						Color colYtoB;
-						float R = (float)((locLeaf.getValue(t)-locLeaf.getValueMin())/(locLeaf.getValueMax()-locLeaf.getValueMin()));//XXXlocLeaf.getValue(t) because value only contains legal time points  
+						//XXX problem R = -0.015075377 in Figure2...
+						float R = (float)((locLeaf.getValue(timepointCounter)-locLeaf.getValueMin())/(locLeaf.getValueMax()-locLeaf.getValueMin()));//XXXlocLeaf.getValue(timepointCounter) because value only contains legal time points  
 						//					System.err.println(R);
 						//					colYtoB = blend2Colors(Color.YELLOW, Color.BLUE, ((tn.getValue(0)-tn.getValueMin())/(tn.getValueMax()-tn.getValueMin())));
-
+						if(R<0){R = 0;}//XXX problem
 						Color colY = new Color((int)Color.YELLOW.getRed(),(int)Color.YELLOW.getGreen(), (int)Color.YELLOW.getBlue(), (int)((1.0-R) *Color.YELLOW.getAlpha()));   //@       //
 						Color colB = new Color((int)Color.BLUE.getRed(),(int)Color.BLUE.getGreen(), (int)Color.BLUE.getBlue(), (int)(Color.BLUE.getAlpha()*R) );
 						//						colYtoB = colorUtilities.blend2AlphaColor(colY, colB);

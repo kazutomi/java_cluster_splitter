@@ -1,1 +1,0 @@
-java clusterSplitter -0 ../testRawDataR20.csv ../testDendrogramR20.txt  ../outdir

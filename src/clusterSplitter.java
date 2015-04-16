@@ -15,6 +15,15 @@ public class clusterSplitter {
 	 * elcipse args
 	 * 
 	 * @tominaga +20 1:1,3:6,8:10,12 data.csv dendrogram.txt  ../outdir
+	 * 
+	 * -2 1:1,1 /Users/rh/Documents/Hitachi/workSP/data/convTime/convTimes/convTimeSum.csv /Users/rh/Documents/Hitachi/workSP/data/convTime/convTimes/convTimeSumClusteringPeason.txt outdir/convtime
+	 * 
+	 * java clusterSplitter -0 1:1,3:5,15 testRawDataR20.csv testDendrogramR20.txt  outdir/testout
+	 * java clusterSplitter -0 1:1,18:19,33 text/Figure2TM.csv text/Figure2TM_clusterP.txt outdir/testout
+	 * java clusterSplitter -0 1:1,5:6,10:11,15 ./text/AR0278TM.csv text/AR0278TM_clusterP.txt outdir/testout
+	 * java clusterSplitter -0 1:1,5:6,10:11,15 ./text/AR0538TM.csv text/AR0538TM_clusterP.txt outdir/testout
+	 * java clusterSplitter -0 1:1,3:4,8:9,13:14,18:19,23 ./text/AR1361TM.csv text/AR1361TM_clusterP.txt outdir/testout
+	 * 
 	 * -0 1:1,3:6,8:10,12 ../testRawDataR20.csv ../testDendrogramR20.txt  ../outdir
 	 * -0 1:1,3:5,6 /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/convTimeSum0904.csv /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/Pearson/tree.txt  /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/Pearson/treemapTest
 	 * -0 1:1,3:6,8:10,12 text/testRawDataR20.csv text/testDendrogramR20.txt  outdir/outdir_R20 
@@ -137,20 +146,24 @@ public class clusterSplitter {
 			errorInFlow = false;
 		}catch(Exception err){
 		      err.printStackTrace(System.err);
-	    }finally {
+		      System.err.println("----");
+		      err.printStackTrace();
+	    }
+		/*finally {
 	    	if(printComments){
 	    		System.err.println("user  number : "+userClusterNum);
 	    		System.err.println("ideal number : "+idealClusterNum);
 	    		System.err.println("real  number : "+realClusterNum);
 	    	}
 			if (errorInFlow) {
-				System.err.println("succesful progress number is "+progress);
+//				System.err.println("succesful progress number is "+progress);
 				if(errorInData){
 					System.err.println("error in makeData and writeData");
 					System.exit(1);
 				}
 				if(errorInTreemap){
 					System.err.println("error in makeing treemap");
+					
 					System.exit(2);
 				}
 			} else {
@@ -161,7 +174,7 @@ public class clusterSplitter {
 				if(printClustNum)System.err.println((userSplitMode) +""+ userClusterNum+" : "+tmObj.getClusterNodeList().size());
 				System.exit(0);
 			}
-		}
+		}*/
 	}
 	
 
