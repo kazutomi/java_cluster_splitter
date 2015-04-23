@@ -56,7 +56,7 @@ public class treeNode {
 
 	// from dataTable
 	private String probeID = null;
-	private String geneSymbol = null;
+//	private String geneSymbol = null;
 	private ArrayList<Double> value = new ArrayList<Double>();// do not use for clusterSplitter
 	private double valueMax = -1;
 	private double valueMin = -1;
@@ -430,7 +430,7 @@ public class treeNode {
 				+ "ValueMin = " + this.valueMin + ", " 
 				
 				+ "ProbeID = [" + this.probeID + "], "
-				+ "GeneSymbol = [" + this.geneSymbol + "], " 
+//				+ "GeneSymbol = [" + this.geneSymbol + "], " 
 				
 				+ "Value = "+ this.value + ", " 
 				
@@ -513,13 +513,6 @@ public class treeNode {
 		this.probeID = s;
 	}
 
-	public String getGeneSymbol() {
-		return this.geneSymbol;
-	}
-
-	public void setGeneSymbol(String s) {
-		this.geneSymbol = s;
-	}
 
 	public String getValueOneLine(){
 		String line = "";

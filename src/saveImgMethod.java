@@ -153,34 +153,32 @@ public class saveImgMethod {
 			}
 		}
 
-		/////////////////////////////////////////////
-		//            for all legal TIME POINT          //
-		///////////////////////////////////////////
 		//		System.err.println("enter saveImg");
 		saveImgMethod.tn = tmObj.root;//@del @@ you should do not use all target node as tn after this.
 		
 		if(printComments){
-			System.err.println("the dataset time point from root node = "+ tmObj.root.getValue().size());
+			System.err.println("the number of dataset time point from root node = "+ tmObj.root.getValue().size());
 		}
 
-//		for(int t = 0; t < tmObj.root.getValue().size()/**/; t ++){// old
 		
+		// create shared buffered image
+		// TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
+		// into integer pixels
+		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D ig2 = bi.createGraphics();
+		RenderingHints aa = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		ig2.setRenderingHints(aa);
+
+		/////////////////////////////////////////////
+		//            for all legal TIME POINT          //
+		///////////////////////////////////////////
 		// loop for all timepoints from args 
 		for(int timepointCounter = 0; timepointCounter < clusterSplitter.getTreemapTimepoints().size(); timepointCounter ++){//XXX for all legal time points
 			int timepointColNum = clusterSplitter.getTreemapTimepoints().get(timepointCounter);
-//			System.err.println("tn.getValue().size() -> " +tn.getValue().size());
+			//System.err.println("tn.getValue().size() -> " +tn.getValue().size());
+//			System.err.println("timepointCounter: "+timepointCounter);//XXX DEL 
+			
 			try {
-
-				//				System.err.println("enter try");
-
-				// TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
-				// into integer pixels
-				BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-				Graphics2D ig2 = bi.createGraphics();
-				RenderingHints aa = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				ig2.setRenderingHints(aa);
-
 
 				////////////////////////////////////////////
 				// [draw / fill] for each CLUSTER color  //
@@ -189,11 +187,11 @@ public class saveImgMethod {
 
 
 				///////////////////////////////
-				// FILL each cluster block  //
+				// FILL each CLUSTER block  //
 				/////////////////////////////
-				if(G < 2){// no color
+				if(G < 2){// G>=2 then no cluster color 
 					treeNode locCluster;
-					for (int i = 0; i < tmObj.getClusterList().size(); i++) {
+					for (int i = 0; i < tmObj.getClusterList().size(); i++) {//XXX check the structure for memory release
 //						tn = mtObj.getClusterList().get(i);//@del get cluster note
 						locCluster = tmObj.getClusterList().get(i);// get cluster note
 						//						
@@ -204,8 +202,6 @@ public class saveImgMethod {
 						colY = new Color((int)Color.YELLOW.getRed(),(int)Color.YELLOW.getGreen(), (int)Color.YELLOW.getBlue(), (int)((1.0-R) *Color.YELLOW.getAlpha()));          //
 						colB = new Color((int)Color.BLUE.getRed(),(int)Color.BLUE.getGreen(), (int)Color.BLUE.getBlue(), (int)(Color.BLUE.getAlpha()*R) );
 						colYtoB = colorUtilities.blend2AlphaColor(colY, colB);
-						//					colYtoB.RGBtoHSB(colYtoB.getRed(), colYtoB.getGreen(),colYtoB.getBlue(), colfYtoB);
-						//					g.setColor(Color.getHSBColor(colfYtoB[0], colfYtoB[1], colfYtoB[2]));
 						ig2.setColor(colYtoB);
 						ig2.fill(new Rectangle2D.Double(locCluster.getTMX() * TMW + TMX, locCluster.getTMY() * TMH + TMY, locCluster.getTMW() * TMW, locCluster.getTMH() * TMH));
 
@@ -223,7 +219,7 @@ public class saveImgMethod {
 
 
 				/////////////////////////////////////////
-				//  [draw / fill] for each GENE block //
+				//  [draw / fill] for each NODE block //
 				///////////////////////////////////////
 				//			System.err.println("before GENE");
 				treeNode locLeaf = tmObj.getFirstLeaf();
@@ -241,7 +237,7 @@ public class saveImgMethod {
 					/////////////////////////
 					if(G > 1){
 						Color colYtoB;
-						//XXX problem R = -0.015075377 in Figure2...
+						//XXX !! problem R = -0.015075377 in Figure2...
 						float R = (float)((locLeaf.getValue(timepointCounter)-locLeaf.getValueMin())/(locLeaf.getValueMax()-locLeaf.getValueMin()));//XXXlocLeaf.getValue(timepointCounter) because value only contains legal time points  
 						//					System.err.println(R);
 						//					colYtoB = blend2Colors(Color.YELLOW, Color.BLUE, ((tn.getValue(0)-tn.getValueMin())/(tn.getValueMax()-tn.getValueMin())));
@@ -276,23 +272,49 @@ public class saveImgMethod {
 				//////////////////////////////
 				//  draw for cluster LINE  //
 				////////////////////////////
-				//			System.err.println("before line");
-				if(true){
-					for (int i = tmObj.getClusterList().size() - 2; i >= 0; i--) {// 100 cluster -> i = 98(100-2), 25
-						// cluster -> i = 23 (25-2)  because... if you draw 1 line it's for 2 cluster, if you set the i 10 then 10->0, it draws 11 times
-						treeNode locCluster = tmObj.getBranchArray()[i];
+				// cluster LINE METOD 1 by upper nodes of cluster nodes
+				if(false){
+					for (int i = tmObj.getClusterList().size() - 2; i >= 0; i--) {
+						// in here, it's not actually draw the cluster itself's block outline;
+						// here draws the separate line of each pair of clusters.
+						// and these information are from of the upper node of each clusters.
+						// that's why you need here the upper node from "tmObj.getBranchArray()[i]"
+						// TODO but if tmObj has a list of all upper nodes, then the duplication of the locUppernode could be avoid
+						// because two cluster nodes have the same upper node.
+						// so the current for statement has a lot duplication for calling "locUppernode"
+						//
+						// example of the number of needed upper nodes
+						// 100 cluster -> i = 98(100-2),
+						// 25  cluster -> i = 23 (25-2)  
+						// because... if you draw 1 line it's for 2 cluster, if you set the i 10 then 10->0, it draws 11 times
+						treeNode locUppernode = tmObj.getBranchArray()[i];
 //						tn = mtObj.branchArray[i];//@del
 
 						// float hue = (float) (i*1.0/mtObj.branchArray.length * 0.7 + 0.25);
 						// g.setColor(Color.getHSBColor(hue,1.0f,1.0f));
-						ig2.setColor(Color.BLACK);//
+						ig2.setColor(Color.RED);//XXX , BLACK is default; RED for test
 						//ig2.setColor(new Color(102, 237, 188));
 						ig2.setStroke(new BasicStroke(2));
-						ig2.draw(new Line2D.Double(locCluster.getSX() * TMW + TMX, locCluster.getSY() * TMH + TMY, locCluster.getEX() * TMW + TMX, locCluster.getEY() * TMH + TMY));
+						ig2.draw(new Line2D.Double(locUppernode.getSX() * TMW + TMX, locUppernode.getSY() * TMH + TMY, locUppernode.getEX() * TMW + TMX, locUppernode.getEY() * TMH + TMY));
 
 					}
+					
 				}
-
+				
+				// cluster LINE METHOD 2 by cluster node block
+				treeNode locCluster;
+				for (int i = 0; i < tmObj.getClusterList().size(); i++) {//XXX check the structure for memory release
+					//////////////////////////////////
+					// DRAW each cluster block line // 
+					//////////////////////////////////
+					locCluster = tmObj.getClusterList().get(i);// get cluster note
+					ig2.setColor(Color.BLACK);
+					ig2.draw(new Rectangle2D.Double(locCluster.getTMX() * TMW + TMX, locCluster.getTMY() * TMH + TMY, locCluster.getTMW() * TMW, locCluster.getTMH() * TMH));
+				
+				}
+				
+				// cluster LINE METHOD 3 by cluster split position
+				// make the position list, then only "for" for all positions in the list
 
 				///////////////////////////////
 				// decide file name to save //
@@ -305,15 +327,17 @@ public class saveImgMethod {
 
 				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".PNG";
 				ImageIO.write(bi, "PNG", new File(folderName +"/"+ outputName));
-				if(printComments)System.err.println("saved img "+outputName);
+				if(printComments){System.err.println("saved img "+outputName);}
 				//			ImageIO.write(bi, "JPEG", new File("c:\\yourImageName.JPG"));
 				//			ImageIO.write(bi, "gif", new File("c:\\yourImageName.GIF"));
 				//			ImageIO.write(bi, "BMP", new File("c:\\yourImageName.BMP"));
 
-
+				
+				
 				//end of saving images
-			} catch (IOException ie) {
-				ie.printStackTrace();
+				
+			} catch (Exception e) {
+			    e.printStackTrace(System.err);
 				System.err.println("error in save img");
 			}
 //			System.err.println("save done -> t ="+ t +", tn.getValue().size() -> *");//@test
@@ -397,9 +421,9 @@ public class saveImgMethod {
 
 
 			//end of saving images
-		} catch (IOException ie) {
-			ie.printStackTrace();
-			System.err.println("error in save img");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("error in saveFrame");
 		}
 
 

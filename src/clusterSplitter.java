@@ -22,7 +22,7 @@ public class clusterSplitter {
 	 * java clusterSplitter -0 1:1,18:19,33 text/Figure2TM.csv text/Figure2TM_clusterP.txt outdir/testout
 	 * java clusterSplitter -0 1:1,5:6,10:11,15 ./text/AR0278TM.csv text/AR0278TM_clusterP.txt outdir/testout
 	 * java clusterSplitter -0 1:1,5:6,10:11,15 ./text/AR0538TM.csv text/AR0538TM_clusterP.txt outdir/testout
-	 * java clusterSplitter -0 1:1,3:4,8:9,13:14,18:19,23 ./text/AR1361TM.csv text/AR1361TM_clusterP.txt outdir/testout
+	 * java clusterSplitter -0 1:1,3:4,8:9,13:14,18:19,23 ./text/AR1361TM.csv ./text/AR1361TM_clusterP.txt ./outdir/testout
 	 * 
 	 * -0 1:1,3:6,8:10,12 ../testRawDataR20.csv ../testDendrogramR20.txt  ../outdir
 	 * -0 1:1,3:5,6 /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/convTimeSum0904.csv /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/Pearson/tree.txt  /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/Pearson/treemapTest
@@ -49,6 +49,7 @@ public class clusterSplitter {
 	// start col and end col is correspond. exp:[1,3:6,8:10,12]
 	// then can get the correspond tupul by <timepointStarCol.get(i), timepointEndCol.get(i)>
 	private static ArrayList<Integer> treemapTimepoints = new ArrayList<Integer>();
+	private static ArrayList<float[]> clusterSplitlinePosList = new ArrayList<float[]>();  // for drawing treemap's cluster line
 	
 	private static File expressionFile;
 	private static File dendrogramFile;
@@ -78,15 +79,15 @@ public class clusterSplitter {
 													// in treeMethod
 
 	private static boolean writeClusterNum = false;// @tempo
-	private static boolean hasExtraDataRow = false;
+//	private static boolean hasExtraDataRow = false;
 
-	public static boolean isHasExtraDataRow() {
-		return hasExtraDataRow;
-	}
+//	public static boolean isHasExtraDataRow() {
+//		return hasExtraDataRow;
+//	}
 
-	public static void setHasExtraDataRow(boolean hasExtraDataRow) {
-		clusterSplitter.hasExtraDataRow = hasExtraDataRow;
-	}
+//	public static void setHasExtraDataRow(boolean hasExtraDataRow) {
+//		clusterSplitter.hasExtraDataRow = hasExtraDataRow;
+//	}
 	
 	private static String errorHeader = " [ERROR] : ";
 
@@ -111,18 +112,17 @@ public class clusterSplitter {
 			tmObj.makeData(inputTreeFilePath, inputValueFilePath);// read csv file
 			progress = 0;
 			
+			// after make data, most middle node could be delete -> save more memory 
+			
+			// [step 1.1.1]
+			// delete mid nodes
+			tmObj.deleteMidnodes();
+			
 			// [step 1.2]
 			// make output files
-			tmObj.writeFilesForTominagaModule(outputDir);
+			tmObj.writeFilesForTominagaModule(outputDir);// -> file output -> memory
 			progress = 1;
 			
-			/* for checking cluster nodes
-			ListIterator litr = tmObj.getClusterNodeList().listIterator();
-			while(litr.hasNext()){
-				treeNode tarNode = (treeNode) litr.next();
-				System.err.println(tarNode.getHira()+"-"+tarNode.getHorz()+"("+tarNode.getHeight()+"), ");
-			}
-			*/
 			
 			// for testing
 			if(printComments)System.err.println("saved cluster lists");
@@ -130,8 +130,8 @@ public class clusterSplitter {
 			
 			
 			//// -[step2.1]- make treeMap output folder
-			String treemapOutputFolderName = getOutputDir().getPath();//untested
-//			String treemapOutputFolderName = FileMethod.makeNewDirectory(getTreemapFolderName(), "Treemap").getPath(); 
+			String treemapOutputFolderName = getOutputDir().getPath();// set treemap output folder
+			
 			progress = 2;
 			//// -[step2.2]- create and save treemaps
 ////			saveImgMethod.saveImgs(0);// or 0x11<=>0x[genes' color][genes' line] 0->[-,-], 1[-,line], 2[color,-], 3[color, line]
@@ -174,7 +174,7 @@ public class clusterSplitter {
 				if(printClustNum)System.err.println((userSplitMode) +""+ userClusterNum+" : "+tmObj.getClusterNodeList().size());
 				System.exit(0);
 			}
-		}*/
+		}/**/
 	}
 	
 

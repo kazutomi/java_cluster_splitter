@@ -385,10 +385,10 @@ public class treeMethod {
 			int l = tn.getTableLine();
 			tn.setProbeID(this.dataTable.get(l).get(0));
 			int rowSize = this.dataTable.get(0).size();
-			if(rowSize == this.dataTable.get(l).size() && clusterSplitter.isHasExtraDataRow()){
-				tn.setGeneSymbol(this.dataTable.get(l).get(rowSize - 1));
-				
-			}
+//			if(rowSize == this.dataTable.get(l).size() && clusterSplitter.isHasExtraDataRow()){
+//				tn.setGeneSymbol(this.dataTable.get(l).get(rowSize - 1));
+//				
+//			}
 			
 			
 			////
@@ -1380,6 +1380,15 @@ public class treeMethod {
 		
 		
 			
+	}
+
+
+
+
+
+	public void deleteMidnodes() {
+		// TODO Auto-generated method stub
+		
 	}
 }
 
