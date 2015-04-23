@@ -1407,6 +1407,11 @@ public class treeMethod {
 			}
 		}
 	}
+
+	public void deleteDataTable() {
+		this.tableDataString = null;
+		this.dataTable = null;
+	}
 	
 	
 }

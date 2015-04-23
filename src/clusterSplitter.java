@@ -123,6 +123,9 @@ public class clusterSplitter {
 			tmObj.writeFilesForTominagaModule(outputDir);// -> file output -> memory
 			progress = 1;
 			
+			//[step 1.2.1]
+			// delete .csv's string table <- this table only used for making out put csv files. not necessary anymore
+			tmObj.deleteDataTable();
 			
 			// for testing
 			if(printComments)System.err.println("saved cluster lists");
