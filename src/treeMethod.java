@@ -45,15 +45,15 @@ public class treeMethod {
 	// you can change this queue as a variabe of a function in stead of for this class.
 	// (then you should change the function which you use for the breadth first search for branchArray)
 	private Queue<treeNode> firstQueue = new LinkedList<treeNode>();// only for breadth-first branch search;
-	private Queue<treeNode> secondQueue = new LinkedList<treeNode>();// only for breadth-first branch search;
 	private LinkedList<treeNode> nodeList = new LinkedList<treeNode>();// for holding  branches as a list in order of [height];
 	private LinkedList<treeNode> clusterNodeList = new LinkedList<treeNode>();// for cluster. the .size() is [custerMun]
 	private treeNode[] upperNodeArray;// for create clusterList//@@ del
-	
-//	private treeNode[] midNodeArray;
+	private Queue<treeNode> tmpQueue = new LinkedList<treeNode>();// for breadth-first treenode search in deleteMidnodes;
+
+	//	private treeNode[] midNodeArray;
 	ArrayList<String> tableDataString = new ArrayList<String>();
 	ArrayList<ArrayList<String>> dataTable = new ArrayList<ArrayList<String>>();
-	private String tableHeader = "";
+//	private String tableHeader = "";
 
 	// constructor
 	public treeMethod(treeNode r) {
@@ -222,6 +222,16 @@ public class treeMethod {
 //		nodeArray = nodeList.toArray(new treeNode[0]);
 	}
 	
+	private void putChildrenToQue(treeNode c) {
+		if (c.getLeft() != null) {
+			firstQueue.add(c.getLeft());
+		}
+		if (c.getRight() != null) {
+			firstQueue.add(c.getRight());
+		}
+
+	}
+	
 	private void addNodeList(int s, int t){
 		// make a t nodes list from s > node list. (t>s)
 	}
@@ -250,15 +260,6 @@ public class treeMethod {
 		// copy the nodes from s+1 node to t node of nodeList to join s nodes nodeArray (s>t) -> ex addNodeArray(1,2) -> put one new node to nodeArray
 	}
 
-	private void putChildrenToQue(treeNode c) {
-		if (c.getLeft() != null) {
-			firstQueue.add(c.getLeft());
-		}
-		if (c.getRight() != null) {
-			firstQueue.add(c.getRight());
-		}
-
-	}
 
 	private void addNewNodeList(treeNode c) {// with bubble sort method
 		int index = nodeList.size() - 1;
@@ -1378,17 +1379,35 @@ public class treeMethod {
 			
 		}
 		
-		
-			
 	}
 
 
 
 
 
-	public void deleteMidnodes() {
-		// TODO Auto-generated method stub
+	public void deleteMidnodes() { // delete all nodes in the tree except leafs and clusternodes
+		// init queue
+		Queue<treeNode> treeNodeQueue = new LinkedList<treeNode>();
+		treeNodeQueue.clear();
+		treeNodeQueue.add(this.root); 
+		treeNode tn = null;
 		
+		// operation for all nodes
+		while(!treeNodeQueue.isEmpty()){
+			tn = treeNodeQueue.poll();// current target treeNode
+			if (tn.getLeft() != null) {
+				treeNodeQueue.add(tn.getLeft());
+			}
+			if (tn.getRight() != null) {
+				treeNodeQueue.add(tn.getRight());
+			}
+			if (!tn.isClusterNode() && !tn.isLeaf()){
+				// if the current node is not a cluster node neither a leaf node then delete from memory
+				tn = null;
+			}
+		}
 	}
+	
+	
 }
 
