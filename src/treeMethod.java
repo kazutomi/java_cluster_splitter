@@ -528,16 +528,23 @@ public class treeMethod {
 		for(int i = 0; i < this.getClusterNodeList().size(); i++){
 			clstNode = this.getClusterNodeList().get(i);
 			try {
-				File file = new File(outD, (i+1)+".csv");
+				File file = new File(outD, clstNode.getHiraHorz().concat("_dataTable.csv"));
 				// if file doesnt exists, then create it
 				if (!file.exists()) {
 					file.createNewFile();
 				}
 				FileWriter fw = new FileWriter(file.getAbsoluteFile());
 				BufferedWriter bw = new BufferedWriter(fw);
-				//
+				// create the header line of string from dataTable<ArrayList>
+				String line;
+				StringBuilder sb =new StringBuilder();
+				for (String s : dataTable.get(0)){
+					sb.append(",".concat(s));
+				}
+				line = sb.substring(1).concat("\n");// delete the last char "," and add "\n"
 				//write process
-				bw.write(tableDataString.get(0)+"\n");
+				bw.write(line); // TODO change tableDataString to dataTAble
+//				bw.write(tableDataString.get(0)+"\n");// XXX DELE
 //				bw.write(dataTableLine(0)+"\n");//header @@@error
 				Queue<treeNode> tmpQ = new LinkedList<treeNode>();
 				treeNode tarNode;//target
@@ -546,7 +553,14 @@ public class treeMethod {
 					while (!tmpQ.isEmpty()) {
 						tarNode = tmpQ.poll();
 						if(tarNode.isLeaf()){
-							bw.write(tableDataString.get(tarNode.getTableLine())+"\n");
+							// create the whole line of dataTable in tarNode 
+							sb.setLength(0);// make the sb<StringBuilder> empty
+							for (String s : dataTable.get(tarNode.getTableLine())){
+								sb.append(",".concat(s));
+							}
+							line = sb.substring(1).concat("\n");// delete the last char "," and add "\n"
+							bw.write(line);// TODO change tableDataString to dataTable
+//							bw.write(tableDataString.get(tarNode.getTableLine())+"\n");//XXX DELE
 //							bw.write(dataTableLine(tarNode.getTableLine())+"\n");
 //							bw.write(tarNode.getProbeID()+","+tarNode.getValueOneLine()+"\n");
 							

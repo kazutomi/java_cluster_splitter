@@ -128,7 +128,7 @@ public class clusterSplitter {
 			tmObj.deleteDataTable();
 			
 			// [step 1.2.2]
-			// garbage collectior
+			// garbage collector
 			System.gc();
 			
 			// for testing
