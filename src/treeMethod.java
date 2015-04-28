@@ -528,7 +528,7 @@ public class treeMethod {
 		for(int i = 0; i < this.getClusterNodeList().size(); i++){
 			clstNode = this.getClusterNodeList().get(i);
 			try {
-				File file = new File(outD, clstNode.getHiraHorz().concat("_dataTable.csv"));
+				File file = new File(outD, clstNode.getHiraHorz().concat(".csv"));
 				// if file doesnt exists, then create it
 				if (!file.exists()) {
 					file.createNewFile();
