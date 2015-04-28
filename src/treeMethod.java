@@ -51,7 +51,7 @@ public class treeMethod {
 	private Queue<treeNode> tmpQueue = new LinkedList<treeNode>();// for breadth-first treenode search in deleteMidnodes;
 
 	//	private treeNode[] midNodeArray;
-	ArrayList<String> tableDataString = new ArrayList<String>();
+//	ArrayList<String> tableDataString = new ArrayList<String>();
 	ArrayList<ArrayList<String>> dataTable = new ArrayList<ArrayList<String>>();
 //	private String tableHeader = "";
 
@@ -604,7 +604,7 @@ public class treeMethod {
 			int lineNum = 0;
 			while ((SLine = br.readLine()) != null) {
 				// TODO only left DataTable -> delate TableDataString is ideal
-				fillTableDataString(SLine);
+//				fillTableDataString(SLine);//XXX DELE
 				
 				// length check in value rows only, not in metadata row
 				if(lineNum < clusterSplitter.getMetaRowNum()){
@@ -645,9 +645,9 @@ public class treeMethod {
 //		if (printComments){System.err.println("[HEADER] : "+tableHeader);}
 //	}
 
-	private void fillTableDataString(String sLine) {
-		tableDataString.add(sLine);
-	}
+//	private void fillTableDataString(String sLine) {// XXX DELE
+//		tableDataString.add(sLine);
+//	}
 
 	
 	private void fillDataTable(int checkLength, String l) {
@@ -1423,7 +1423,7 @@ public class treeMethod {
 	}
 
 	public void deleteDataTable() {
-		this.tableDataString = null;
+//		this.tableDataString = null;//XXX DELE/
 		this.dataTable = null;
 	}
 	
