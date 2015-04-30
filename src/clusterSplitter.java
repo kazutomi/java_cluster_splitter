@@ -11,6 +11,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class clusterSplitter {
+	//////////////
+	// switchies//
+	//////////////
+	
+	// show memory 
+	private static boolean showMemory = false;
+	
+	// record start time
+	private static boolean showTime = false;
+	
+	
 	/*
 	 * elcipse args
 	 * 
@@ -79,20 +90,15 @@ public class clusterSplitter {
 													// in treeMethod
 
 	private static boolean writeClusterNum = false;// @tempo
-//	private static boolean hasExtraDataRow = false;
-
-//	public static boolean isHasExtraDataRow() {
-//		return hasExtraDataRow;
-//	}
-
-//	public static void setHasExtraDataRow(boolean hasExtraDataRow) {
-//		clusterSplitter.hasExtraDataRow = hasExtraDataRow;
-//	}
-	
 	private static String errorHeader = " [ERROR] : ";
+	
+	
+	
 
 	public static void main(String[] args) {
-		
+
+		long startTime = System.currentTimeMillis();
+
 		// checking args[] number
 		boolean errorInFlow = true;// init -> true
 		boolean printComments = false;
@@ -106,17 +112,36 @@ public class clusterSplitter {
 		boolean errorInTreemap = true;
 		int progress = 0;
 		try {// main work flow area
+			//show total memory
+			printCurrentMemory("init");
 			
 			// [step 1.1]
 			// make data -> read dedrogram file and make tree then decide the cluster number then make cluster information
 			tmObj.makeData(inputTreeFilePath, inputValueFilePath);// read csv file
 			progress = 0;
+
+			//show total memory
+			printCurrentMemory("makeData");
+			
+			// garbage collector
+			System.gc();
+			//show total memory
+			printCurrentMemory("gc post MD");
 			
 			// after make data, most middle node could be delete -> save more memory 
 			
 			// [step 1.1.1]
 			// delete mid nodes
 			tmObj.deleteMidnodes();
+
+			//show total memory
+			printCurrentMemory("deleteMidnodes");
+			
+			// garbage collector
+			System.gc();
+
+			//show total memory
+			printCurrentMemory("gc post deleMD");
 			
 			// [step 1.2]
 			// make output files
@@ -126,15 +151,18 @@ public class clusterSplitter {
 			// [step 1.2.1]
 			// delete .csv's string table <- this table only used for making out put csv files. not necessary anymore
 			tmObj.deleteDataTable();
+
+			//show total memory
+			printCurrentMemory("deleteDataTable");
 			
 			// [step 1.2.2]
 			// garbage collector
 			System.gc();
+
+			//show total memory
+			printCurrentMemory("gc post deleDT");
 			
-			// for testing
-			if(printComments)System.err.println("saved cluster lists");
 			errorInData = false;
-			
 			
 			//// -[step2.1]- make treeMap output folder
 			String treemapOutputFolderName = getOutputDir().getPath();// set treemap output folder
@@ -146,6 +174,10 @@ public class clusterSplitter {
 			saveImgMethod.saveImgs("treemap", 2, treemapOutputFolderName);//only genes color -> most useful
 			progress = 3;
 ////			saveImgMethod.saveImgs(3);//gene's color and gene's block line
+			
+			//show total memory
+			 printCurrentMemory("saveImgs");
+			
 			saveImgMethod.saveFrame("treemap", treemapOutputFolderName);//(?) no color only gene cluster's line and name -> to show the treemap structure
 			progress = 4;
 			
@@ -182,8 +214,26 @@ public class clusterSplitter {
 				System.exit(0);
 			}
 		}/**/
+		
+		// record finished time
+		long finishTime = System.currentTimeMillis();
+		//show total memory
+		if (showTime) System.err.print("running time: "+ (finishTime - startTime)+"\n");
 	}
 	
+
+
+	private static void printCurrentMemory(String s) {
+		if(showMemory) System.err.printf(
+				"%-15s  %s %9d  %s% 9d  %s% 9d%n",
+				s,
+				"total:", Runtime.getRuntime().totalMemory(),
+				"free:", Runtime.getRuntime().freeMemory(),
+				"max:", Runtime.getRuntime().maxMemory()
+				) ;
+		
+	}
+
 
 
 	private static void initOptionSettings() {
