@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -17,6 +18,7 @@ public class clusterSplitter {
 	
 	// show memory 
 	private static boolean showMemory = false;
+	private static long currentMemory; 
 	
 	// record start time
 	private static boolean showTime = false;
@@ -29,19 +31,15 @@ public class clusterSplitter {
 	 * 
 	 * -2 1:1,1 /Users/rh/Documents/Hitachi/workSP/data/convTime/convTimes/convTimeSum.csv /Users/rh/Documents/Hitachi/workSP/data/convTime/convTimes/convTimeSumClusteringPeason.txt outdir/convtime
 	 * 
-	 * java clusterSplitter -0 1:1,3:5,15 testRawDataR20.csv testDendrogramR20.txt  outdir/testout
-	 * java clusterSplitter -0 1:1,18:19,33 text/Figure2TM.csv text/Figure2TM_clusterP.txt outdir/testout
-	 * java clusterSplitter -0 1:1,5:6,10:11,15 ./text/AR0278TM.csv text/AR0278TM_clusterP.txt outdir/testout
-	 * java clusterSplitter -0 1:1,5:6,10:11,15 ./text/AR0538TM.csv text/AR0538TM_clusterP.txt outdir/testout
-	 * java clusterSplitter -0 1:1,3:4,8:9,13:14,18:19,23 ./text/AR1361TM.csv ./text/AR1361TM_clusterP.txt ./outdir/testout
+	 * java clusterSplitter -0 1:2,6:7,11:12,16 testRawDataR20.csv testDendrogramR20.txt  outdir/testout
+	 * java clusterSplitter -0 1:2,19:20,34 text/Figure2TM.csv text/Figure2TM_clusterP.txt outdir/testout
+	 * java clusterSplitter -0 1:2,6:7,11:12,16 ./text/AR0278TM.csv text/AR0278TM_clusterP.txt outdir/testout
+	 * java clusterSplitter -0 1:2,6:7,11:12,16 ./text/AR0538TM.csv text/AR0538TM_clusterP.txt outdir/testout
+	 * java clusterSplitter -0 1:2,4:5,9:10,14:15,19:20,24 ./text/AR1361TM.csv ./text/AR1361TM_clusterP.txt ./outdir/testout
 	 * 
 	 * -0 1:1,3:6,8:10,12 ../testRawDataR20.csv ../testDendrogramR20.txt  ../outdir
 	 * -0 1:1,3:5,6 /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/convTimeSum0904.csv /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/Pearson/tree.txt  /Users/rh/Documents/Hitachi/workSP/data/convTimeMonthly/0904/Pearson/treemapTest
 	 * -0 1:1,3:6,8:10,12 text/testRawDataR20.csv text/testDendrogramR20.txt  outdir/outdir_R20 
-	 * -0 text/AR0278TM.csv text/AR0278TM_clusterP.txt  outdir_AR0278TM 
-	 * -0 text/AR0538TM.csv text/AR0538TM_clusterP.txt  outdir_AR0538TM 
-	 * -0 text/AR1361TM.csv text/AR1361TM_clusterP.txt  outdir_AR1361TM 
-	 * -0 text/Figure2TM.csv text/Figure2TM_clusterP.txt  outdir_Figure2TM
 	 * 
 	 * 
 	 * */
@@ -112,8 +110,9 @@ public class clusterSplitter {
 		boolean errorInTreemap = true;
 		int progress = 0;
 		try {// main work flow area
+			System.gc();
 			//show total memory
-			printCurrentMemory("init");
+			printCurrentMemory("gc@init");
 			
 			// [step 1.1]
 			// make data -> read dedrogram file and make tree then decide the cluster number then make cluster information
@@ -121,48 +120,47 @@ public class clusterSplitter {
 			progress = 0;
 
 			//show total memory
-			printCurrentMemory("makeData");
+//			printCurrentMemory("makeData");
 			
 			// garbage collector
 			System.gc();
 			//show total memory
-			printCurrentMemory("gc post MD");
+			printCurrentMemory("gc@makeData");
 			
 			// after make data, most middle node could be delete -> save more memory 
+			
 			
 			// [step 1.1.1]
 			// delete mid nodes
 			tmObj.deleteMidnodes();
-
 			//show total memory
-			printCurrentMemory("deleteMidnodes");
-			
 			// garbage collector
 			System.gc();
-
 			//show total memory
-			printCurrentMemory("gc post deleMD");
+			printCurrentMemory("gc@deleMidNodes");
+			
 			
 			// [step 1.2]
 			// make output files
 			tmObj.writeFilesForTominagaModule(outputDir);// -> file output -> memory
 			progress = 1;
+			// garbage collector
+			System.gc();
+			//show total memory
+			printCurrentMemory("gc@writeCSV");
+			
 			
 			// [step 1.2.1]
 			// delete .csv's string table <- this table only used for making out put csv files. not necessary anymore
 			tmObj.deleteDataTable();
-
 			//show total memory
-			printCurrentMemory("deleteDataTable");
-			
-			// [step 1.2.2]
 			// garbage collector
 			System.gc();
-
-			//show total memory
-			printCurrentMemory("gc post deleDT");
+			//show memory
+			printCurrentMemory("gc@deleDTable");
 			
 			errorInData = false;
+			
 			
 			//// -[step2.1]- make treeMap output folder
 			String treemapOutputFolderName = getOutputDir().getPath();// set treemap output folder
@@ -176,10 +174,15 @@ public class clusterSplitter {
 ////			saveImgMethod.saveImgs(3);//gene's color and gene's block line
 			
 			//show total memory
-			 printCurrentMemory("saveImgs");
+			// garbage collector
+			System.gc();
+			printCurrentMemory("gc@saveImgs");
 			
 			saveImgMethod.saveFrame("treemap", treemapOutputFolderName);//(?) no color only gene cluster's line and name -> to show the treemap structure
 			progress = 4;
+			// garbage collector
+			System.gc();
+			printCurrentMemory("gc@saveFrame");
 			
 			errorInTreemap = false;
 			errorInFlow = false;
@@ -222,17 +225,6 @@ public class clusterSplitter {
 	}
 	
 
-
-	private static void printCurrentMemory(String s) {
-		if(showMemory) System.err.printf(
-				"%-15s  %s %9d  %s% 9d  %s% 9d%n",
-				s,
-				"total:", Runtime.getRuntime().totalMemory(),
-				"free:", Runtime.getRuntime().freeMemory(),
-				"max:", Runtime.getRuntime().maxMemory()
-				) ;
-		
-	}
 
 
 
@@ -331,27 +323,28 @@ public class clusterSplitter {
 				errorInChecking = true;
 			}
 			// for timepoint rows
+			
+			// check the colNum's legality
+			// is the colNum a positive number?
+			// is the colNum bigger than the last one? (except the 1st one)
+			// is the colNum not bigger than data table? -> add check to the reading data tatle! <- done
 			treemapTimepoints.clear();
 			ArrayList<Integer> timepointStartColNum = new ArrayList<Integer>();
 			ArrayList<Integer> timepointEndColNum = new ArrayList<Integer>(); 
-			timepointStartColNum.add(-1);// for the comparison
-			timepointEndColNum.add(-1);// for the comparison
+			timepointStartColNum.add(0);// set the biggest illegal number for the comparison -> will be delete in the next for loop's i == 1
+			timepointEndColNum.add(0);// set the biggest illegal number  for the comparison -> will be delete in the next for loop's i == 1
 			
 			for(int i = 1; i < figs.length; i ++){
 				String[] tuple = figs[i].split(",");
 				int startColNum = Integer.parseInt(tuple[0]);
 				int endColNum = Integer.parseInt(tuple[1]);
 				
-				// TODO XXX check the colNum's legality
-				// is the colNum a non-nega int?
-				// is the colNum bigger than the last one? (except the 1st one)
-				// is the colNum not bigger than data table? -> TODO add check to the reading data batle!
 				if ( startColNum > timepointEndColNum.get(timepointEndColNum.size() -1) && endColNum >= startColNum ){
 					
 					// delate the first [-1] only for the 1st time
 					if(i == 1){
-						timepointStartColNum.clear();
-						timepointEndColNum.clear();
+						timepointStartColNum.clear();// delete the initial '-1'
+						timepointEndColNum.clear();// delete the initial '-1'
 					}
 					
 					// make colNumLists
@@ -363,12 +356,26 @@ public class clusterSplitter {
 						treemapTimepoints.add(j);
 					}
 				}else {
-					System.err.println("the given number for timepoint colum number: \""+figs[i]+"\", in 2nd arg: \""+a[1]+"\", is not acceptable.\n all numbers have to be non-negative, start column number should be bigger than the previous end column number, and end column number should be not smaller than the previous start column number");
+					System.err.println("the given number for timepoint colum number: \""+figs[i]+"\", in 2nd arg: \""+a[1]+"\", is not acceptable.\n all numbers have to be positive number, start column number should be bigger than the previous end column number, and end column number should be not smaller than the previous start column number");
 					errorInChecking = true;
 					break;
 				}
 			}
 
+			System.out.print("\n");
+			// decrement 1 for each int in treemapTimepoints -> input number is "1 start": so it needs to be adjustified to "0 start"
+			for(int i = 0; i < treemapTimepoints.size(); i ++){
+				int oldVal = treemapTimepoints.get(i);
+				treemapTimepoints.set(i, --oldVal);
+			}
+
+//			//for check the values in treemapTimepoints
+//			System.out.print("treemapTimepoints:");
+//			for(int i : treemapTimepoints){
+//				System.out.print(i+",");
+//			}
+//			System.exit(0);
+			
 			
 			//
 			// 3rd and 4th args -> file path
@@ -600,6 +607,23 @@ public class clusterSplitter {
 
 	public static void setOutputDir(File outputDir) {
 		clusterSplitter.outputDir = outputDir;
+	}
+
+	
+	private static void printCurrentMemory(String s) {
+		if(showMemory){
+			long preMemory = currentMemory;
+			currentMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+			System.err.printf(
+				"%-15s  %s %9d  %s%9d  %s%9d  %s%9d (%fMB)  %s%9d (%+fMB)%n",
+				s,
+				"max:", Runtime.getRuntime().maxMemory(),
+				"total:", Runtime.getRuntime().totalMemory(),
+				"free:", Runtime.getRuntime().freeMemory(),
+				"using:", currentMemory, currentMemory/(1024*1024.0), 
+				"change:", currentMemory - preMemory, (currentMemory - preMemory)/(1024*1024.0)
+				) ;
+		}
 	}
 
 }
