@@ -362,7 +362,6 @@ public class clusterSplitter {
 				}
 			}
 
-			System.out.print("\n");
 			// decrement 1 for each int in treemapTimepoints -> input number is "1 start": so it needs to be adjustified to "0 start"
 			for(int i = 0; i < treemapTimepoints.size(); i ++){
 				int oldVal = treemapTimepoints.get(i);
