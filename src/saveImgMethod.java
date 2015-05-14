@@ -322,10 +322,10 @@ public class saveImgMethod {
 				//			System.err.println("before save img");
 				//				String timePoint = ""+(t+1);
 				String timePoint = String.format("%02d", (timepointColNum));
-//				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".PNG";
+//				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".png";
 				//+(int)saveImgMethod.TMW
 
-				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".PNG";
+				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".png";
 				ImageIO.write(bi, "PNG", new File(folderName +"/"+ outputName));
 				if(printComments){System.err.println("saved img "+outputName);}
 				//			ImageIO.write(bi, "JPEG", new File("c:\\yourImageName.JPG"));
@@ -412,7 +412,7 @@ public class saveImgMethod {
 			/////////////////////////////
 			//			System.err.println("before save img");
 
-			String outputName = saveImgMethod.fileName+"FrameC"+tmObj.getClusterList().size()+".PNG";
+			String outputName = saveImgMethod.fileName+"FrameC"+tmObj.getClusterList().size()+".png";
 			ImageIO.write(bi, "PNG", new File(path+"/"+outputName));
 			if(printComments)System.err.println("saved img "+outputName);
 			//			ImageIO.write(bi, "JPEG", new File("c:\\yourImageName.JPG"));
