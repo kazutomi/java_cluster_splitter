@@ -665,7 +665,13 @@ public class treeMethod {
 	
 	private void fillDataTable(int checkLength, String l) {
 		this.dataTable.add(new ArrayList<String>());
-		String[] elements = l.concat(" ").split(",");
+		
+		// split the data to elements but keep the last empty cell
+		String spaceToken = " ";
+		String[] elements = l.concat(spaceToken).split(",");
+		String lastElemnt = elements[elements.length-1];
+		elements[elements.length-1] = lastElemnt.substring(0, lastElemnt.length()-1);
+		
 		if( checkLength > 0 && elements.length-1 < clusterSplitter.getTreemapTimepoints().get(clusterSplitter.getTreemapTimepoints().size()-1)){
 			System.err.println(
 					"the given number of time point (in the 2nd arg) is bigger than the data's column size (in the 3rd arg)" +

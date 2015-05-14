@@ -434,12 +434,3 @@ public class saveImgMethod {
 	}
 }
 
-//			Font font = new Font("TimesRoman", Font.BOLD, 20);
-//			ig2.setFont(font);
-//			String message = "www.java2s.com!";
-//			FontMetrics fontMetrics = ig2.getFontMetrics();
-//			int stringWidth = fontMetrics.stringWidth(message);
-//			int stringHeight = fontMetrics.getAscent();
-//			ig2.setPaint(Color.black);
-//			ig2.drawString(message, (width - stringWidth) / 2, height / 2 + stringHeight / 4);
-
