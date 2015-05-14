@@ -485,7 +485,7 @@ public class treeMethod {
 			if(printComments)System.err.println(clstfile.getPath());
 			
 			FileWriter fw = new FileWriter(clstfile.getAbsoluteFile());
-			BufferedWriter ckstbw = new BufferedWriter(fw);
+			BufferedWriter clstbw = new BufferedWriter(fw);
 			
 			File namefile = new File(outD, "name.csv");
 			// if file doesnt exists, then create it
@@ -508,13 +508,14 @@ public class treeMethod {
 				int j = 0;
 //				clstNod = (treeNode) litr.next();
 				clstNod = this.getClusterNodeList().get(i);
-				namebw.write((i+1)+", "+clstNod.getHiraHorz()+", "+clstNod.getMembers()+"\n");
+//				namebw.write((i+1)+", "+clstNod.getHiraHorz()+", "+clstNod.getMembers()+"\n");// metodh to keep node numbers
+				namebw.write((i+1)+", "+clstNod.getHiraHorz()+"\n");
 				tmpQ.add(clstNod);
 				while (!tmpQ.isEmpty()) {
 					tarNod = tmpQ.poll();
 					if(tarNod.isLeaf()){
 						j++;
-						ckstbw.write((tarNod.getTableLine()+0)+"\n");
+						clstbw.write((tarNod.getTableLine()+0)+"\n");
 //						bw.write(tarNod.getProbeID()+", "+(tarNod.getTableLine()+0)+"\n");
 //						bw.write(tarNod.getProbeID()+", "+tarNod.getValueOneLine()+", "+tarNod.getGeneSymbol()+", "+(i+1)+"-["+ clstNod.getHira()+"-"+clstNod.getHorz()+"]"+"\n");
 					}else{
@@ -522,11 +523,11 @@ public class treeMethod {
 						tmpQ.add(tarNod.getRight());
 					}
 				}
-				ckstbw.write("\n");
+				clstbw.write("\n");
 			}
 			//end write process
 			//
-			ckstbw.close();
+			clstbw.close();
 			namebw.close();
 			if(printComments)System.err.println("saved ClusterRow");//@system
 			
