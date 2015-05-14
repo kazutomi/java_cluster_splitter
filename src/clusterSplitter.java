@@ -169,7 +169,7 @@ public class clusterSplitter {
 			//// -[step2.2]- create and save treemaps
 ////			saveImgMethod.saveImgs(0);// or 0x11<=>0x[genes' color][genes' line] 0->[-,-], 1[-,line], 2[color,-], 3[color, line]
 ////			saveImgMethod.saveImgs(1);// no color, only gene's block line
-			saveImgMethod.saveImgs("treemap", 2, treemapOutputFolderName);//only genes color -> most useful
+			saveImgMethod.saveImgs("", 2, treemapOutputFolderName);//only genes color -> most useful
 			progress = 3;
 ////			saveImgMethod.saveImgs(3);//gene's color and gene's block line
 			
@@ -178,7 +178,7 @@ public class clusterSplitter {
 			System.gc();
 			printCurrentMemory("gc@saveImgs");
 			
-			saveImgMethod.saveFrame("treemap", treemapOutputFolderName);//(?) no color only gene cluster's line and name -> to show the treemap structure
+			saveImgMethod.saveFrame("", treemapOutputFolderName);//(?) no color only gene cluster's line and name -> to show the treemap structure
 			progress = 4;
 			// garbage collector
 			System.gc();
