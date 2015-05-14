@@ -476,14 +476,26 @@ public class treeMethod {
 	
 	public void writeClusterRow(File outD){
 		boolean printComments = false;
-		try{File file = new File(outD, "clusters.csv");
+		try{
+			File clstfile = new File(outD, "clusters.csv");
 			// if file doesnt exists, then create it
-			if (!file.exists()) {
-				file.createNewFile();
+			if (!clstfile.exists()) {
+				clstfile.createNewFile();
 			}
-			if(printComments)System.err.println(file.getPath());
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
+			if(printComments)System.err.println(clstfile.getPath());
+			
+			FileWriter fw = new FileWriter(clstfile.getAbsoluteFile());
+			BufferedWriter ckstbw = new BufferedWriter(fw);
+			
+			File namefile = new File(outD, "name.csv");
+			// if file doesnt exists, then create it
+			if (!namefile.exists()) {
+				namefile.createNewFile();
+			}
+			if(printComments)System.err.println(namefile.getPath());
+
+			BufferedWriter namebw = new BufferedWriter(new FileWriter(namefile.getAbsoluteFile()));
+			
 			//
 			//write process
 			Queue<treeNode> tmpQ = new LinkedList<treeNode>();
@@ -496,13 +508,13 @@ public class treeMethod {
 				int j = 0;
 //				clstNod = (treeNode) litr.next();
 				clstNod = this.getClusterNodeList().get(i);
-//				tarNod = clstNod;
+				namebw.write((i+1)+", "+clstNod.getHiraHorz()+", "+clstNod.getMembers()+"\n");
 				tmpQ.add(clstNod);
 				while (!tmpQ.isEmpty()) {
 					tarNod = tmpQ.poll();
 					if(tarNod.isLeaf()){
 						j++;
-						bw.write((tarNod.getTableLine()+0)+"\n");
+						ckstbw.write((tarNod.getTableLine()+0)+"\n");
 //						bw.write(tarNod.getProbeID()+", "+(tarNod.getTableLine()+0)+"\n");
 //						bw.write(tarNod.getProbeID()+", "+tarNod.getValueOneLine()+", "+tarNod.getGeneSymbol()+", "+(i+1)+"-["+ clstNod.getHira()+"-"+clstNod.getHorz()+"]"+"\n");
 					}else{
@@ -510,11 +522,12 @@ public class treeMethod {
 						tmpQ.add(tarNod.getRight());
 					}
 				}
-				bw.write("\n");
+				ckstbw.write("\n");
 			}
 			//end write process
 			//
-			bw.close();
+			ckstbw.close();
+			namebw.close();
 			if(printComments)System.err.println("saved ClusterRow");//@system
 			
 		} catch (IOException e) {
