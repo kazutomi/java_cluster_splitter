@@ -397,7 +397,8 @@ public class saveImgMethod {
 				
 				Font font = new Font("TimesRoman", Font.PLAIN, 18);
 				ig2.setFont(font);
-				String message = "["+tn.getHira()+"-"+tn.getHorz()+"]";
+//				String message = "["+tn.getHira()+"-"+tn.getHorz()+"]";// old node HiraHori name method
+				String message = tn.getHiraHorz();
 				FontMetrics fontMetrics = ig2.getFontMetrics();
 				int stringWidth = fontMetrics.stringWidth(message);
 				int stringHeight = fontMetrics.getAscent();

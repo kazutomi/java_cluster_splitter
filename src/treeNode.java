@@ -439,7 +439,7 @@ public class treeNode {
 	}
 	
 	public String getHiraHorz() {
-		return ( this.hira+ "-"+ this.horz);
+		return ( "C"+this.hira+ "-"+ this.horz);
 	}
 
 	public void setTMFigures(double x, double y, double w, double h, double r) {
