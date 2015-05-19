@@ -159,7 +159,7 @@ public class treeNode {
 
 	public int getHira() {
 		int i = this.hira;
-		return i+1;
+		return (i+1);
 	}
 
 	public int getHorz() {
@@ -439,7 +439,7 @@ public class treeNode {
 	}
 	
 	public String getHiraHorz() {
-		return ( this.hira+ "-"+ this.horz);
+		return ( this.getHira()+ "-"+ this.getHorz());
 	}
 
 	public void setTMFigures(double x, double y, double w, double h, double r) {
