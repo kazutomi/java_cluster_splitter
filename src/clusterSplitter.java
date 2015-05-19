@@ -31,6 +31,7 @@ public class clusterSplitter {
 	 * 
 	 * -2 1:1,1 /Users/rh/Documents/Hitachi/workSP/data/convTime/convTimes/convTimeSum.csv /Users/rh/Documents/Hitachi/workSP/data/convTime/convTimes/convTimeSumClusteringPeason.txt outdir/convtime
 	 * 
+	 * java clusterSplitter +3 1:2,4:5,7:8,10 ./text/smalltable.csv ./text/smalltree.txt outdir/testout
 	 * java clusterSplitter -0 1:2,6:7,11:12,16 testRawDataR20.csv testDendrogramR20.txt  outdir/testout
 	 * java clusterSplitter -0 1:2,19:20,34 text/Figure2TM.csv text/Figure2TM_clusterP.txt outdir/testout
 	 * java clusterSplitter -0 1:2,6:7,11:12,16 ./text/AR0278TM.csv text/AR0278TM_clusterP.txt outdir/testout

@@ -159,7 +159,7 @@ public class treeNode {
 
 	public int getHira() {
 		int i = this.hira;
-		return i;
+		return i+1;
 	}
 
 	public int getHorz() {
