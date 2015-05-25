@@ -185,7 +185,10 @@ public class saveImgMethod {
 				//////////////////////////////////////////
 				//			System.err.println("before cluster");
 
-
+				//draw white background
+				ig2.setColor(Color.WHITE);
+				ig2.fill(new Rectangle2D.Double(0, 0, width, height));
+				
 				///////////////////////////////
 				// FILL each CLUSTER block  //
 				/////////////////////////////
