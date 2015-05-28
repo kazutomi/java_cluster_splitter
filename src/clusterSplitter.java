@@ -4,9 +4,11 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,6 +30,8 @@ public class clusterSplitter {
 	 * elcipse args
 	 * 
 	 * @tominaga +20 1:1,3:6,8:10,12 data.csv dendrogram.txt  ../outdir
+	 * 
+	 * for second arg test 1:5,7:4,6:9,9 -> [4,5,6,7,9]
 	 * 
 	 * -2 1:1,1 /Users/rh/Documents/Hitachi/workSP/data/convTime/convTimes/convTimeSum.csv /Users/rh/Documents/Hitachi/workSP/data/convTime/convTimes/convTimeSumClusteringPeason.txt outdir/convtime
 	 * 
@@ -315,19 +319,53 @@ public class clusterSplitter {
 			
 			//
 			// 2nd arg -> numbers for meta row and timepoint col
+			// 2-1
 			String figs[] = a[1].split(":");
 			// for meta row
-			if(Integer.parseInt(figs[0]) >= 0){
+			if(Integer.parseInt(figs[0]) >= 1){
 				setMetaRowNum(Integer.parseInt(figs[0]));
 			}else {
 				System.err.println("the given number for meta row number: \""+figs[0]+"\", in 2nd arg: \""+a[1]+"\", is not acceptable.\n the number should be non-negative integer.");
 				errorInChecking = true;
 			}
+			// 2-2
 			// for timepoint rows
+			/* new mtehods */
+			// [check list]
+			// 1 check the colNum's legality -> positive integer
+			// 2 is the end colNum >= start colNum?
+			// 3 is the colNum not bigger than data table? -> add check to the reading data tatle! <- done
+
+			treemapTimepoints.clear();
+			Set tpSet = new HashSet();
+			for(int i = 1; i < figs.length; i ++){
+				String[] tuple = figs[i].split(",");
+				int startColNum = Integer.parseInt(tuple[0]);
+				int endColNum = Integer.parseInt(tuple[1]);
+				
+				if ( 0 < startColNum && startColNum <= endColNum){// check for 1 and 2 in check list
+					// make treemapTimepoints
+					for(int tp = startColNum; tp <= endColNum; tp ++){
+						tpSet.add(tp);
+//						treemapTimepoints.add(j);
+						}
+				}else {
+					System.err.println("the given number for timepoint colum number: \""+figs[i]+"\", in 2nd arg: \""+a[1]+"\", is not acceptable.\n" +
+							"all colum numbers have to be positive numbers, " +
+							"and the end column number should not be smaller than the start column number");
+					errorInChecking = true;
+					break;
+				}
+			}
+
+			treemapTimepoints.addAll(tpSet);
+			Collections.sort(treemapTimepoints);
 			
+			/* old methods for 2-2
 			// check the colNum's legality
 			// is the colNum a positive number?
-			// is the colNum bigger than the last one? (except the 1st one)
+			// is the (n)th start colNum > the (n-1)th end one? (except the 1st one)
+			// is the (n)th end colNum >= the (n)th start one?
 			// is the colNum not bigger than data table? -> add check to the reading data tatle! <- done
 			treemapTimepoints.clear();
 			ArrayList<Integer> timepointStartColNum = new ArrayList<Integer>();
@@ -362,12 +400,14 @@ public class clusterSplitter {
 					break;
 				}
 			}
-
+			/**/
 			// decrement 1 for each int in treemapTimepoints -> input number is "1 start": so it needs to be adjustified to "0 start"
+			
 			for(int i = 0; i < treemapTimepoints.size(); i ++){
 				int oldVal = treemapTimepoints.get(i);
 				treemapTimepoints.set(i, --oldVal);
 			}
+
 
 //			//for check the values in treemapTimepoints
 //			System.out.print("treemapTimepoints:");
