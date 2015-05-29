@@ -324,7 +324,7 @@ public class saveImgMethod {
 				/////////////////////////////
 				//			System.err.println("before save img");
 				//				String timePoint = ""+(t+1);
-				String timePoint = String.format("%d", (timepointColNum));
+				String timePoint = String.format("%d", (timepointColNum)+1);
 //				String outputName = saveImgMethod.fileName+"_G"+G+"C"+tmObj.getClusterList().size()+"T"+timePoint+".png";
 				//+(int)saveImgMethod.TMW
 
